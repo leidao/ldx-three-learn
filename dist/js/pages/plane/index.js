@@ -4,7 +4,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * @Author: ldx
  * @Date: 2023-11-03 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:02:24
+ * @LastEditTime: 2023-11-04 02:09:51
  */
 import { SlackOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -24,7 +24,6 @@ const Home = () => {
         if (!ref.current)
             return;
         const viewer = new Viewer(ref.current);
-        viewer.initScene();
         viewer.useOrbitControls();
         viewer.controls.enableZoom = false;
         viewer.listen();
@@ -34,9 +33,9 @@ const Home = () => {
         viewer.on('decLife', (num) => {
             setLife(num);
             if (num === 0) {
-                setLife(5);
-                setStar(0);
                 setTimeout(() => {
+                    setLife(5);
+                    setStar(0);
                     game.gameOver();
                     setPlay(false);
                 }, 600);

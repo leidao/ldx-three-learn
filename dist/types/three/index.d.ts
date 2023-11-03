@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Emit } from './emit';
 import { lon2xyz, threeToScreen } from './math';
+import Music from './music';
 export { lon2xyz, threeToScreen };
 export default class Viewer extends Emit {
     /** 场景 */
@@ -19,6 +20,7 @@ export default class Viewer extends Emit {
     /** 容器 */
     container: HTMLDivElement;
     manager: THREE.LoadingManager;
+    music: Music;
     constructor(container: HTMLDivElement);
     /**
      * @function: 初始化编辑器场景

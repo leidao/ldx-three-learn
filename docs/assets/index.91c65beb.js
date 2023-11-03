@@ -1,1 +1,0 @@
-import{r,j as e}from"./index.94675155.js";const a=()=>(r.exports.useEffect(()=>{},[]),e("div",{className:"h-100%  box-border p-10px pb-0px",children:e("div",{className:"h-100%  bg-white",children:e("div",{id:"container",className:"h-100%"})})}));export{a as default};

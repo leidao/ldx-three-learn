@@ -27,9 +27,11 @@ export declare class Game {
     /** 加载天空 */
     loadSky(): THREE.CubeTexture;
     initBall(): void;
+    /** 初始化音乐 */
     initMusic(): void;
     /** 加载飞机 */
     loadPlane(): void;
+    /** 加载障碍物 */
     loadObstacle(): void;
     update(): void;
     /** 计算碰撞 */
