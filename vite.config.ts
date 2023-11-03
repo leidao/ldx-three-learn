@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 14:45:22
  * @LastEditors: ldx
- * @LastEditTime: 2022-04-15 12:59:48
+ * @LastEditTime: 2023-11-04 01:17:04
  */
 import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
@@ -48,7 +48,8 @@ export default defineConfig({
     //   resolves: [AntdResolve()]
     // })
   ],
-  base: './',
+  // publicPath: '/vue-three-traffic-editor',
+  base: '/ldx-three-learn',
   server: {
     port: 8004,
     open: true,
