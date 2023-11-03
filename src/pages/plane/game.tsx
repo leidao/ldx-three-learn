@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:03:03
+ * @LastEditTime: 2023-11-04 02:29:47
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -49,6 +49,7 @@ export class Game {
     this.loadObstacle()
     this.listen()
     this.initBall()
+    this.initMusic()
     this.pos = new THREE.Vector3()
     this.viewer.on('complete', () => {
       this.obstacles = new THREE.Group()
@@ -100,7 +101,12 @@ export class Game {
     this.ball = new THREE.Mesh(geometry, material)
     this.ball.name = 'ball'
   }
-  initMusic() {}
+  /** 初始化音乐 */
+  initMusic() {
+    this.viewer.music.loadMusic('gliss.mp3', 'plane/music/')
+    this.viewer.music.loadMusic('engine.mp3', 'plane/music/', true, 1)
+    this.viewer.music.loadMusic('explosion.mp3', 'plane/music/')
+  }
   /** 加载飞机 */
   loadPlane() {
     this.gltfLoader.setPath('plane/glb/')
@@ -117,6 +123,7 @@ export class Game {
       this.render()
     })
   }
+  /** 加载障碍物 */
   loadObstacle() {
     this.obstacle = new THREE.Group()
     this.gltfLoader.setPath('plane/glb/')
@@ -193,14 +200,28 @@ export class Game {
           if (distance2 < 10 && distance2 > -10 && !mesh.userData.isCollide) {
             mesh.userData.isCollide = true
             if (mesh.name === 'star') {
+              this.viewer.music.setPlay('gliss.mp3')
               this.starNum++
               this.viewer.emit('addStar', this.starNum)
             } else {
+              this.viewer.music.setPlay('explosion.mp3')
               this.lifeNum--
               this.viewer.emit('decLife', this.lifeNum)
               this.ball.position.set(p3.x, p3.y, p3.z)
               this.viewer.scene.add(this.ball)
               this.clock2.start()
+            }
+          }
+        })
+      } else {
+        child.children.forEach((mesh) => {
+          if (mesh.userData.isCollide) {
+            mesh.userData.isCollide = false
+            if (mesh.name === 'star') {
+              this.viewer.music.setStop('gliss.mp3')
+            } else {
+              this.viewer.music.setStop('explosion.mp3')
+              this.viewer.scene.remove(this.ball)
             }
           }
         })
@@ -254,6 +275,7 @@ export class Game {
   }
   startGame() {
     this.playing = true
+    this.viewer.music.setPlay('engine.mp3')
   }
   gameOver() {
     this.reset()
@@ -262,13 +284,14 @@ export class Game {
     this.playing = false
     this.lifeNum = 5
     this.starNum = 0
+    this.viewer.music.setStopAll()
     this.plane.position.set(0, 0, -100)
     this.viewer.camera.position.set(-180, 0, -40)
-    this.viewer.scene.remove(this.ball)
-    this.obstacles.children.forEach((child) => {
-      child.children.forEach((mesh) => {
-        mesh.userData.isCollide = false
-      })
-    })
+    // this.viewer.scene.remove(this.ball)
+    // this.obstacles.children.forEach((child) => {
+    //   child.children.forEach((mesh) => {
+    //     mesh.userData.isCollide = false
+    //   })
+    // })
   }
 }

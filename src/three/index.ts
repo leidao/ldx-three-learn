@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 00:48:48
+ * @LastEditTime: 2023-11-04 01:54:09
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -17,6 +17,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // import SpriteText from 'three-spritetext'
 import { Emit } from './emit'
 import { lon2xyz, threeToScreen } from './math'
+import Music from './music'
 export { lon2xyz, threeToScreen }
 const config = {
   /** 环境光 */
@@ -42,13 +43,16 @@ export default class Viewer extends Emit {
   /** 容器 */
   container!: HTMLDivElement
   manager!: THREE.LoadingManager
+  music: Music
   constructor(container: HTMLDivElement) {
     super()
     this.container = container
     this.raycaster = new THREE.Raycaster()
     this.textLoader = new THREE.TextureLoader()
     this.textLoader.setCrossOrigin('')
+    this.initScene()
     this.useLoadingManager()
+    this.music = new Music(this.camera, this.manager)
   }
   /**
    * @function: 初始化编辑器场景
@@ -130,13 +134,11 @@ export default class Viewer extends Emit {
     }
 
     this.manager.onLoad = () => {
-      this.emit('complete', '123')
+      this.emit('complete')
     }
-
     this.manager.onProgress = (url, itemsLoaded, itemsTotal) => {
       console.log('onProgress', url, itemsLoaded, itemsTotal)
     }
-
     this.manager.onError = (url) => {
       console.log('There was an error loading ' + url)
     }
