@@ -3,15 +3,16 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:49:21
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:30:55
+ * @LastEditTime: 2023-11-04 01:41:54
  */
 import React from 'react';
+import plane from '/plane/img/plane.png';
 export const examples = [
     {
         path: '/plane',
         key: 'plane',
         component: React.lazy(() => import('@/pages/plane')),
-        icon: '/plane/img/plane.png',
+        icon: plane,
         title: '飞机',
         hideInMenu: true,
         auth: []

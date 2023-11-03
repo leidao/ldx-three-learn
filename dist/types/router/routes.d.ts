@@ -20,7 +20,7 @@ declare const _default: ({
     path: string;
     key: string;
     component: React.LazyExoticComponent<() => JSX.Element>;
-    icon: string;
+    icon: any;
     title: string;
     hideInMenu: boolean;
     auth: never[];

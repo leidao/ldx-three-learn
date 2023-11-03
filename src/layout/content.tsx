@@ -3,13 +3,10 @@
  * @Author: ldx
  * @Date: 2022-04-06 21:56:29
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-03 23:39:25
+ * @LastEditTime: 2023-11-04 01:42:12
  */
 import { Layout } from 'antd'
-import { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
-
-import { RouteLoading } from '@/components'
 
 import { RoutesType } from '../router/routes'
 function Content(props: any) {
@@ -38,7 +35,6 @@ function Content(props: any) {
       }
     })
   }
-  console.log('props.routes', props.routes)
 
   return (
     <Layout.Content

@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * @Author: ldx
  * @Date: 2022-04-06 21:56:29
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-03 23:39:25
+ * @LastEditTime: 2023-11-04 01:42:12
  */
 import { Layout } from 'antd';
 import { Route, Routes } from 'react-router-dom';
@@ -26,7 +26,6 @@ function Content(props) {
             }
         });
     };
-    console.log('props.routes', props.routes);
     return (_jsx(Layout.Content, { style: {
             minHeight: 280
         }, children: _jsx(Routes, { children: renderRoutes(props.routes) }) }));

@@ -3,52 +3,23 @@
  * @Author: ldx
  * @Date: 2022-04-06 14:45:22
  * @LastEditors: ldx
- * @LastEditTime: 2022-04-27 13:56:03
+ * @LastEditTime: 2023-11-04 01:39:06
  */
 // import { Layout } from 'antd'
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense } from 'react'
 // const { Footer } = Layout
 import {
   Route,
-  Routes,
-  useLocation,
-  useNavigate
+  Routes
   // useParams
 } from 'react-router-dom'
-import { useRecoilState, useSetRecoilState } from 'recoil'
 
-import { getUser } from '@/api/user'
 import { RouteLoading } from '@/components'
-import { commonState } from '@/recoil'
-import { getToken } from '@/utils'
 
 // import styles from './index.module.less'
 import routes from './routes'
 const RouteList: React.FC = () => {
-  const navigate = useNavigate()
   // const params = useParams()
-  const location = useLocation()
-  const setUserInfo = useSetRecoilState(commonState.userInfo)
-  const [isLogin, setIsLogin] = useRecoilState(commonState.isLogin)
-  const isToken = !!getToken()
-  useEffect(() => {
-    if (isToken) {
-      setIsLogin(true)
-    } else {
-      setIsLogin(false)
-    }
-    if (!isToken && location.pathname != '/register') {
-      navigate('/login' + location.search)
-    }
-    console.log('index', isToken)
-  }, [isLogin])
-
-  useEffect(() => {
-    if (!isToken) return
-    getUser().then((res) => {
-      setUserInfo(res.data)
-    })
-  }, [])
 
   return (
     <Suspense fallback={<RouteLoading />}>
