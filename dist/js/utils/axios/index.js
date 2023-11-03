@@ -1,0 +1,109 @@
+import { message } from 'antd';
+import axios from 'axios';
+import { history } from '@/App';
+import { getToken } from '..';
+//创建实例
+const request = axios.create({
+    baseURL: '/api/v1',
+    timeout: 1000 * 60 // 60s后请求超时
+});
+request.interceptors.request.use(async function (config) {
+    const aToken = getToken();
+    // 更新token
+    if (aToken) {
+        config.headers['Authorization'] = JSON.parse(aToken);
+    }
+    //TODO 全局loading，暂未完成
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+// 响应拦截
+request.interceptors.response.use((response) => {
+    console.log('response:', response);
+    const { data } = response;
+    const { code, msg } = data;
+    switch (code) {
+        // case 1000:
+        case 200:
+            // message.success(msg)
+            return Promise.resolve(data);
+        case 403:
+            message.error('登录过期');
+            //TODO 把当前的路由信息缓存，重新登陆后跳转到当前路由
+            history.push('/login');
+            return Promise.reject(data);
+        case 5000:
+            message.error(msg);
+            return Promise.reject(data);
+        default:
+            // 失败
+            message.error(msg);
+            return Promise.reject(data);
+    }
+}, (error) => {
+    console.log('requset error', error);
+    // history.push('/register')
+    if (error && error.response) {
+        switch (error.response.status) {
+            case 401:
+                message.error('登录过期');
+                history.push('/login');
+                // window.location.href = '/login'
+                break;
+            case 403:
+                //TODO 把当前的路由信息缓存，重新登陆后跳转到当前路由
+                message.error('拒绝访问');
+                break;
+            case 404:
+                message.error('请求错误,未找到该资源');
+                break;
+            case 405:
+                message.error('请求方法未允许');
+                break;
+            case 500:
+                // window.location.href='/error500'
+                break;
+            default:
+                message.error(`连接错误${error.response.data.status}`);
+        }
+    }
+    else {
+        message.error('连接到服务器失败');
+    }
+    return Promise.reject(error);
+});
+export default {
+    get: function (url, params) {
+        return request({
+            url,
+            params,
+            method: 'GET'
+        });
+    },
+    post: function (url, data) {
+        return request({
+            url,
+            data,
+            method: 'POST'
+        });
+    },
+    put: function (url, data) {
+        return request({
+            url,
+            data,
+            method: 'PUT'
+        });
+    },
+    delete: function (url, data) {
+        return request({
+            url,
+            data,
+            method: 'DELETE'
+        });
+    },
+    request: function (options) {
+        return request(options);
+    }
+    // cancels // 切换路由之前 遍历cancels 执行方法 取消之前的请求
+};
