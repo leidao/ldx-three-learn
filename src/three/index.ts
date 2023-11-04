@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:54:09
+ * @LastEditTime: 2023-11-04 20:48:01
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -16,6 +16,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 // import SpriteText from 'three-spritetext'
 import { Emit } from './emit'
+import { LoadingBar } from './LoadingBar'
 import { lon2xyz, threeToScreen } from './math'
 import Music from './music'
 export { lon2xyz, threeToScreen }
@@ -38,21 +39,20 @@ export default class Viewer extends Emit {
   controls!: OrbitControls
   /** 射线 */
   raycaster!: THREE.Raycaster
-  /** 加载器 */
-  textLoader!: THREE.TextureLoader
+
   /** 容器 */
   container!: HTMLDivElement
-  manager!: THREE.LoadingManager
+  loadmanager!: THREE.LoadingManager
   music: Music
+  loadingBar: LoadingBar
   constructor(container: HTMLDivElement) {
     super()
     this.container = container
-    this.raycaster = new THREE.Raycaster()
-    this.textLoader = new THREE.TextureLoader()
-    this.textLoader.setCrossOrigin('')
     this.initScene()
     this.useLoadingManager()
-    this.music = new Music(this.camera, this.manager)
+    this.raycaster = new THREE.Raycaster()
+    this.loadingBar = new LoadingBar()
+    this.music = new Music(this.camera, this.loadmanager)
   }
   /**
    * @function: 初始化编辑器场景
@@ -128,19 +128,23 @@ export default class Viewer extends Emit {
     window.removeEventListener('resize', this.onResize)
   }
   useLoadingManager() {
-    this.manager = new THREE.LoadingManager()
-    this.manager.onStart = (url, itemsLoaded, itemsTotal) => {
-      console.log('onStart', url, itemsLoaded, itemsTotal)
+    this.loadmanager = new THREE.LoadingManager()
+    this.loadmanager.onStart = () => {
+      // console.log('onStart', url, itemsLoaded, itemsTotal)
+      this.loadingBar.visible = true
     }
 
-    this.manager.onLoad = () => {
+    this.loadmanager.onLoad = () => {
       this.emit('complete')
+      this.loadingBar.visible = false
     }
-    this.manager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      console.log('onProgress', url, itemsLoaded, itemsTotal)
+    this.loadmanager.onProgress = (url, itemsLoaded, itemsTotal) => {
+      // console.log('onProgress', url, itemsLoaded, itemsTotal)
+      this.loadingBar.update(itemsLoaded, itemsTotal)
+      // console.log('loaded', this.loadingBar.loaded)
     }
-    this.manager.onError = (url) => {
-      console.log('There was an error loading ' + url)
+    this.loadmanager.onError = (url) => {
+      console.log('资源加载出错：', url)
     }
   }
 }

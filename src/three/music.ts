@@ -3,22 +3,25 @@
  * @Author: ldx
  * @Date: 2023-11-04 02:00:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 02:26:55
+ * @LastEditTime: 2023-11-04 19:02:07
  */
 import * as THREE from 'three'
 export default class Music {
   camera: THREE.PerspectiveCamera
   audioLoader!: THREE.AudioLoader
-  manager!: THREE.LoadingManager
+  loadmanager!: THREE.LoadingManager
   sounds: { [key: string]: THREE.Audio } = {}
 
-  constructor(camera: THREE.PerspectiveCamera, manager: THREE.LoadingManager) {
+  constructor(
+    camera: THREE.PerspectiveCamera,
+    loadmanager: THREE.LoadingManager
+  ) {
     this.camera = camera
-    this.manager = manager
+    this.loadmanager = loadmanager
     this.useAudioLoader()
   }
   useAudioLoader() {
-    this.audioLoader = new THREE.AudioLoader(this.manager)
+    this.audioLoader = new THREE.AudioLoader(this.loadmanager)
   }
   loadMusic(name: string, path: string, loop = false, volume = 0.5) {
     const listener = new THREE.AudioListener()

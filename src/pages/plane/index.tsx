@@ -1,9 +1,9 @@
 /*
- * @Description: 飞机
+ * @Description: 飞机小游戏
  * @Author: ldx
  * @Date: 2023-11-03 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 02:09:51
+ * @LastEditTime: 2023-11-04 19:12:38
  */
 
 import { SlackOutlined } from '@ant-design/icons'
@@ -14,10 +14,10 @@ import Viewer from '@/three'
 
 import { Game } from './game'
 let game: Game
-import planePic from './assets/img/plane-icon.png'
-import starPic from './assets/img/star-icon.png'
+import planePic from '/plane/img/plane-icon.png'
+import starPic from '/plane/img/star-icon.png'
 // import { useEffect } from 'react'
-const Home = () => {
+const Plane = () => {
   const [life, setLife] = useState(5)
   const [star, setStar] = useState(0)
   const [playing, setPlay] = useState(false)
@@ -43,11 +43,16 @@ const Home = () => {
       }
     })
     game = new Game(viewer)
+    let id: number
     const animation = () => {
       game.update()
-      requestAnimationFrame(animation)
+      id = requestAnimationFrame(animation)
     }
     animation()
+    return () => {
+      cancelIdleCallback(id)
+      game.destroy()
+    }
   }, [])
   const start = () => {
     setPlay(true)
@@ -75,4 +80,4 @@ const Home = () => {
     </div>
   )
 }
-export default Home
+export default Plane

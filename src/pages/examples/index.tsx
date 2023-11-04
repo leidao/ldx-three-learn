@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:23:44
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:32:23
+ * @LastEditTime: 2023-11-04 21:39:21
  */
 // import { useEffect } from 'react'
 
@@ -17,7 +17,16 @@ const Home = () => {
   return (
     <div className="h-100%  box-borderpb-0px">
       <div className="h-100%  bg-white">
-        <div id="container" className="h-100%  p-10px ">
+        <div
+          id="container"
+          className="h-100%  p-10px "
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(398px, 1fr))',
+            gridTemplateRows: 'repeat(1, 268px)',
+            gap: '10px 12px'
+          }}
+        >
           {examples.map((example: RoutesType) => {
             return (
               <div
