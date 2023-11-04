@@ -5,6 +5,8 @@ export declare class Game {
     /** 视图 */
     viewer: Viewer;
     gltfLoader: GLTFLoader;
+    /** 加载器 */
+    textLoader: THREE.TextureLoader;
     plane: THREE.Object3D;
     bomb: THREE.Object3D;
     star: THREE.Object3D;

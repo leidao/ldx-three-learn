@@ -2,11 +2,11 @@ import * as THREE from 'three';
 export default class Music {
     camera: THREE.PerspectiveCamera;
     audioLoader: THREE.AudioLoader;
-    manager: THREE.LoadingManager;
+    loadmanager: THREE.LoadingManager;
     sounds: {
         [key: string]: THREE.Audio;
     };
-    constructor(camera: THREE.PerspectiveCamera, manager: THREE.LoadingManager);
+    constructor(camera: THREE.PerspectiveCamera, loadmanager: THREE.LoadingManager);
     useAudioLoader(): void;
     loadMusic(name: string, path: string, loop?: boolean, volume?: number): void;
     /** 设置音量 */

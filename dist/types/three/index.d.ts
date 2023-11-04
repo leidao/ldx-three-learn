@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Emit } from './emit';
+import { LoadingBar } from './LoadingBar';
 import { lon2xyz, threeToScreen } from './math';
 import Music from './music';
 export { lon2xyz, threeToScreen };
@@ -15,12 +16,11 @@ export default class Viewer extends Emit {
     controls: OrbitControls;
     /** 射线 */
     raycaster: THREE.Raycaster;
-    /** 加载器 */
-    textLoader: THREE.TextureLoader;
     /** 容器 */
     container: HTMLDivElement;
-    manager: THREE.LoadingManager;
+    loadmanager: THREE.LoadingManager;
     music: Music;
+    loadingBar: LoadingBar;
     constructor(container: HTMLDivElement);
     /**
      * @function: 初始化编辑器场景

@@ -3,21 +3,21 @@
  * @Author: ldx
  * @Date: 2023-11-04 02:00:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 02:26:55
+ * @LastEditTime: 2023-11-04 19:02:07
  */
 import * as THREE from 'three';
 export default class Music {
     camera;
     audioLoader;
-    manager;
+    loadmanager;
     sounds = {};
-    constructor(camera, manager) {
+    constructor(camera, loadmanager) {
         this.camera = camera;
-        this.manager = manager;
+        this.loadmanager = loadmanager;
         this.useAudioLoader();
     }
     useAudioLoader() {
-        this.audioLoader = new THREE.AudioLoader(this.manager);
+        this.audioLoader = new THREE.AudioLoader(this.loadmanager);
     }
     loadMusic(name, path, loop = false, volume = 0.5) {
         const listener = new THREE.AudioListener();

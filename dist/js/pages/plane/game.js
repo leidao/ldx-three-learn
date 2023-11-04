@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 02:29:47
+ * @LastEditTime: 2023-11-04 19:16:37
  */
 import _ from 'lodash';
 import * as THREE from 'three';
@@ -14,6 +14,8 @@ export class Game {
     /** 视图 */
     viewer;
     gltfLoader;
+    /** 加载器 */
+    textLoader;
     plane;
     bomb;
     star;
@@ -41,7 +43,9 @@ export class Game {
         this.viewer = viewer;
         this.clock1 = new THREE.Clock();
         this.clock2 = new THREE.Clock();
-        this.gltfLoader = new GLTFLoader(this.viewer.manager);
+        this.gltfLoader = new GLTFLoader(this.viewer.loadmanager);
+        this.textLoader = new THREE.TextureLoader(this.viewer.loadmanager);
+        this.textLoader.setCrossOrigin('');
         this.loadSky();
         this.loadPlane();
         this.loadObstacle();
@@ -83,7 +87,7 @@ export class Game {
             u_opacity: { value: 0.6 },
             u_resolution: { value: { x: 0, y: 0 } },
             u_tex: {
-                value: this.viewer.textLoader.load(`plane/img/explosion.png`)
+                value: this.textLoader.load(`plane/img/explosion.png`)
             }
         };
         const material = new THREE.ShaderMaterial({
@@ -242,6 +246,7 @@ export class Game {
         document.removeEventListener('mouseup', this.event.mouseup);
         document.removeEventListener('touchstart', this.event.mousedown);
         document.removeEventListener('touchend', this.event.mouseup);
+        this.viewer.destroy();
     }
     /** 键盘按下 */
     keydown = (event) => {
