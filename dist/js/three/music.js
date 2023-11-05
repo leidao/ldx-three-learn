@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 02:00:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 19:02:07
+ * @LastEditTime: 2023-11-05 21:53:57
  */
 import * as THREE from 'three';
 export default class Music {

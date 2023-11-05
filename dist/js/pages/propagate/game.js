@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 21:22:23
+ * @LastEditTime: 2023-11-05 22:11:14
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -22,14 +22,16 @@ export class Game {
     labelRenderer;
     controls;
     constructor(viewer) {
+        viewer.useLoadingManager();
         this.viewer = viewer;
-        this.textLoader = new THREE.TextureLoader(this.viewer.loadmanager);
+        this.textLoader = new THREE.TextureLoader();
         this.textLoader.setCrossOrigin('');
-        this.fileLoader = new THREE.FileLoader(this.viewer.loadmanager);
+        this.fileLoader = new THREE.FileLoader(viewer.loadmanager);
         this.fileLoader.setResponseType('json');
-        this.fontLoad = new FontLoader();
+        this.fontLoad = new FontLoader(viewer.loadmanager);
         this.clock = new THREE.Clock();
         this.uniforms = {};
+        this.drawOutline();
     }
     useCss3Render(data) {
         const { width, height } = this.viewer.container.getBoundingClientRect();
@@ -60,8 +62,9 @@ export class Game {
         };
     }
     startGame() {
+        this.viewer.scene.translateX(-10);
+        this.viewer.scene.translateY(-15);
         this.loadSky();
-        this.drawOutline();
         this.drawLocation([{ to: [117.045982, 35.794391], size: 35 }], true);
         this.fileLoader.load('propagate/data/map.json', (data) => {
             this.drawLines(data);
@@ -69,8 +72,8 @@ export class Game {
             this.createText(data);
             this.drawLocation(data);
             this.useCss3Render(data);
-            this.viewer.scene.translateX(-10);
-            this.viewer.scene.translateY(-15);
+        }, (xhr) => {
+            this.viewer.onProgress('propagate/data/map.json', xhr);
         });
     }
     render() {
@@ -146,6 +149,8 @@ export class Game {
             this.viewer.scene.add(lineGroup);
             this.viewer.scene.add(shapeGroup);
             this.render();
+        }, (xhr) => {
+            this.viewer.onProgress('propagate/data/world.json', xhr);
         });
     };
     drawLineLoop = (pointArr, material) => {

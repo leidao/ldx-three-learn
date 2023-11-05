@@ -4,6 +4,10 @@ import { Emit } from './emit';
 import { LoadingBar } from './LoadingBar';
 import { lon2xyz, threeToScreen } from './math';
 import Music from './music';
+export declare type LoaderManager = {
+    onProgress: (assetName: string, xhr: ProgressEvent<EventTarget>) => void;
+    onError: (error: ErrorEvent) => void;
+};
 export { lon2xyz, threeToScreen };
 export default class Viewer extends Emit {
     /** 场景 */
@@ -21,6 +25,7 @@ export default class Viewer extends Emit {
     loadmanager: THREE.LoadingManager;
     music: Music;
     loadingBar: LoadingBar;
+    onProgress: (assetName: string, xhr: ProgressEvent) => void;
     constructor(container: HTMLDivElement);
     /**
      * @function: 初始化编辑器场景

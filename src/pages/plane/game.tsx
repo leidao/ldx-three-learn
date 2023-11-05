@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 19:16:37
+ * @LastEditTime: 2023-11-05 22:21:42
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -42,11 +42,12 @@ export class Game {
       mousedown: _.throttle(this.mousedown, 60),
       mouseup: _.throttle(this.mouseup, 60)
     }
+    viewer.useLoadingManager()
     this.viewer = viewer
     this.clock1 = new THREE.Clock()
     this.clock2 = new THREE.Clock()
-    this.gltfLoader = new GLTFLoader(this.viewer.loadmanager)
-    this.textLoader = new THREE.TextureLoader(this.viewer.loadmanager)
+    this.gltfLoader = new GLTFLoader(viewer.loadmanager)
+    this.textLoader = new THREE.TextureLoader(viewer.loadmanager)
     this.textLoader.setCrossOrigin('')
     this.loadSky()
     this.loadPlane()
@@ -59,13 +60,15 @@ export class Game {
       this.obstacles = new THREE.Group()
       for (let i = 0; i < 10; i++) {
         const obstacle = this.obstacle.clone()
+
         obstacle.position.z += 150 * i
         obstacle.position.y += Math.sin(i) * 40
         // obstacle.position.y += (Math.random() * 2 - 1) * 40
         this.obstacles.add(obstacle)
-        this.render()
       }
+      // console.log('bbbb', this.obstacles, this.obstacle)
       this.viewer.scene.add(this.obstacles)
+      this.render()
     })
   }
   render() {
@@ -114,44 +117,62 @@ export class Game {
   /** 加载飞机 */
   loadPlane() {
     this.gltfLoader.setPath('plane/glb/')
-    this.gltfLoader.load('microplane.glb', (glb) => {
-      this.plane = glb.scene
-      this.plane.scale.set(10, 10, 10)
-      this.plane.position.set(0, 0, -100)
-      // console.log(' this.plane', this.plane)
+    this.gltfLoader.load(
+      'microplane.glb',
+      (glb) => {
+        this.plane = glb.scene
+        this.plane.scale.set(10, 10, 10)
+        this.plane.position.set(0, 0, -100)
+        // console.log(' this.plane', this.plane)
 
-      this.viewer.scene.add(this.plane)
-      this.viewer.camera.position.set(-180, 0, -40)
-      this.viewer.camera.lookAt(this.plane.position)
-      // this.viewer.camera.rotateX(-Math.PI / 2)
-      this.render()
-    })
+        this.viewer.scene.add(this.plane)
+        this.viewer.camera.position.set(-180, 0, -40)
+        this.viewer.camera.lookAt(this.plane.position)
+        // this.viewer.camera.rotateX(-Math.PI / 2)
+        this.render()
+      },
+      (xhr) => {
+        this.viewer.onProgress('microplane.glb', xhr)
+      }
+    )
   }
   /** 加载障碍物 */
   loadObstacle() {
     this.obstacle = new THREE.Group()
     this.gltfLoader.setPath('plane/glb/')
-    this.gltfLoader.load('bomb.glb', (glb) => {
-      this.bomb = glb.scene
-      this.bomb.scale.set(10, 10, 10)
-      const values = [90, 45, -45, -90]
-      for (let i = 0; i < 4; i++) {
-        const bomb = this.bomb.clone()
-        bomb.position.y += values[i]
-        bomb.rotation.set(i % 2 ? -Math.PI / 2 : -Math.PI, 0, 0)
-        bomb.name = 'bomb'
-        bomb.userData.isCollide = false
-        this.obstacle.add(bomb)
+    this.gltfLoader.load(
+      'bomb.glb',
+      (glb) => {
+        this.bomb = glb.scene
+        this.bomb.scale.set(10, 10, 10)
+        const values = [90, 45, -45, -90]
+        for (let i = 0; i < 4; i++) {
+          const bomb = this.bomb.clone()
+          bomb.position.y += values[i]
+          bomb.rotation.set(i % 2 ? -Math.PI / 2 : -Math.PI, 0, 0)
+          bomb.name = 'bomb'
+          bomb.userData.isCollide = false
+          this.obstacle.add(bomb)
+        }
+      },
+      (xhr) => {
+        this.viewer.onProgress('bomb.glb', xhr)
       }
-    })
-    this.gltfLoader.load('star.glb', (glb) => {
-      this.star = glb.scene
-      this.star.scale.set(10, 10, 10)
-      const star = this.star.clone()
-      star.name = 'star'
-      star.userData.isCollide = false
-      this.obstacle.add(star)
-    })
+    )
+    this.gltfLoader.load(
+      'star.glb',
+      (glb) => {
+        this.star = glb.scene
+        this.star.scale.set(10, 10, 10)
+        const star = this.star.clone()
+        star.name = 'star'
+        star.userData.isCollide = false
+        this.obstacle.add(star)
+      },
+      (xhr) => {
+        this.viewer.onProgress('star.glb', xhr)
+      }
+    )
   }
   update() {
     const time = this.clock1.getElapsedTime()

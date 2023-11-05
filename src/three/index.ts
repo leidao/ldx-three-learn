@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 20:48:01
+ * @LastEditTime: 2023-11-05 22:28:36
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -19,6 +19,10 @@ import { Emit } from './emit'
 import { LoadingBar } from './LoadingBar'
 import { lon2xyz, threeToScreen } from './math'
 import Music from './music'
+export type LoaderManager = {
+  onProgress: (assetName: string, xhr: ProgressEvent<EventTarget>) => void
+  onError: (error: ErrorEvent) => void
+}
 export { lon2xyz, threeToScreen }
 const config = {
   /** 环境光 */
@@ -45,11 +49,11 @@ export default class Viewer extends Emit {
   loadmanager!: THREE.LoadingManager
   music: Music
   loadingBar: LoadingBar
+  onProgress!: (assetName: string, xhr: ProgressEvent) => void
   constructor(container: HTMLDivElement) {
     super()
     this.container = container
     this.initScene()
-    this.useLoadingManager()
     this.raycaster = new THREE.Raycaster()
     this.loadingBar = new LoadingBar()
     this.music = new Music(this.camera, this.loadmanager)
@@ -127,7 +131,31 @@ export default class Viewer extends Emit {
   destroy = () => {
     window.removeEventListener('resize', this.onResize)
   }
+  // useLoadingManager() {
+  //   // this.loadingBar.visible = true
+  //   this.loadmanager = {
+  //     onProgress: (assetName, xhr) => {
+  //       // console.log('onProgress', url, itemsLoaded, itemsTotal)
+  //       // console.log('this.loadingBar.total', this.loadingBar.total)
+  //       if (this.loadingBar.total > 1 && !this.loadingBar.visible) {
+  //         this.loadingBar.visible = true
+  //       }
+
+  //       this.loadingBar.update(assetName, xhr)
+
+  //       if (this.loadingBar.loaded) {
+  //         this.emit('complete')
+  //         this.loadingBar.visible = false
+  //       }
+  //       // console.log('loaded', this.loadingBar.loaded)
+  //     },
+  //     onError: (err) => {
+  //       console.log('资源加载出错：', err)
+  //     }
+  //   }
+  // }
   useLoadingManager() {
+    const assets = new Map()
     this.loadmanager = new THREE.LoadingManager()
     this.loadmanager.onStart = () => {
       // console.log('onStart', url, itemsLoaded, itemsTotal)
@@ -138,13 +166,20 @@ export default class Viewer extends Emit {
       this.emit('complete')
       this.loadingBar.visible = false
     }
-    this.loadmanager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      // console.log('onProgress', url, itemsLoaded, itemsTotal)
-      this.loadingBar.update(itemsLoaded, itemsTotal)
-      // console.log('loaded', this.loadingBar.loaded)
-    }
+    // this.loadmanager.onProgress = () => {
+
+    // }
     this.loadmanager.onError = (url) => {
       console.log('资源加载出错：', url)
+    }
+    this.onProgress = (assetName, xhr) => {
+      const asset = assets.get(assetName)
+      if (!asset) {
+        assets.set(assetName, { loaded: xhr.loaded, total: xhr.total })
+      } else {
+        asset.loaded = xhr.loaded
+      }
+      this.loadingBar.update(assets)
     }
   }
 }

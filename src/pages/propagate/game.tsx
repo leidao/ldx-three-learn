@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 21:22:23
+ * @LastEditTime: 2023-11-05 22:11:14
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -25,14 +25,16 @@ export class Game {
   labelRenderer!: CSS2DRenderer
   controls!: OrbitControls
   constructor(viewer: Viewer) {
+    viewer.useLoadingManager()
     this.viewer = viewer
-    this.textLoader = new THREE.TextureLoader(this.viewer.loadmanager)
+    this.textLoader = new THREE.TextureLoader()
     this.textLoader.setCrossOrigin('')
-    this.fileLoader = new THREE.FileLoader(this.viewer.loadmanager)
+    this.fileLoader = new THREE.FileLoader(viewer.loadmanager)
     this.fileLoader.setResponseType('json')
-    this.fontLoad = new FontLoader()
+    this.fontLoad = new FontLoader(viewer.loadmanager)
     this.clock = new THREE.Clock()
     this.uniforms = {}
+    this.drawOutline()
   }
   useCss3Render(data: any[]) {
     const { width, height } = this.viewer.container.getBoundingClientRect()
@@ -66,18 +68,23 @@ export class Game {
     }
   }
   startGame() {
+    this.viewer.scene.translateX(-10)
+    this.viewer.scene.translateY(-15)
     this.loadSky()
-    this.drawOutline()
     this.drawLocation([{ to: [117.045982, 35.794391], size: 35 }], true)
-    this.fileLoader.load('propagate/data/map.json', (data: any) => {
-      this.drawLines(data)
-      this.drawFlyLine(data)
-      this.createText(data)
-      this.drawLocation(data)
-      this.useCss3Render(data)
-      this.viewer.scene.translateX(-10)
-      this.viewer.scene.translateY(-15)
-    })
+    this.fileLoader.load(
+      'propagate/data/map.json',
+      (data: any) => {
+        this.drawLines(data)
+        this.drawFlyLine(data)
+        this.createText(data)
+        this.drawLocation(data)
+        this.useCss3Render(data)
+      },
+      (xhr) => {
+        this.viewer.onProgress('propagate/data/map.json', xhr)
+      }
+    )
   }
   render() {
     this.viewer.render()
@@ -119,23 +126,13 @@ export class Game {
       transparent: true,
       opacity: 0.1
     })
-    this.fileLoader.load('propagate/data/world.json', (data: any) => {
-      data.features.forEach((country: any) => {
-        if (country.geometry.type === 'Polygon') {
-          const pointArr: number[] = []
-          const coordinates = country.geometry.coordinates[0] || []
-          if (coordinates.length === 0) return
-          coordinates.forEach((elem: any) => {
-            // const coord = lon2xyz(R * 1.00001, elem[0], elem[1])
-            // pointArr.push(coord.x, coord.y, coord.z)
-            pointArr.push(elem[0], elem[1], 0)
-          })
-          lineGroup.add(this.drawLineLoop(pointArr, lineMaterial))
-          shapeGroup.add(this.drawShpae(coordinates, material))
-        } else if (country.geometry.type === 'MultiPolygon') {
-          country.geometry.coordinates.forEach((polygon: any) => {
+    this.fileLoader.load(
+      'propagate/data/world.json',
+      (data: any) => {
+        data.features.forEach((country: any) => {
+          if (country.geometry.type === 'Polygon') {
             const pointArr: number[] = []
-            const coordinates = polygon[0] || []
+            const coordinates = country.geometry.coordinates[0] || []
             if (coordinates.length === 0) return
             coordinates.forEach((elem: any) => {
               // const coord = lon2xyz(R * 1.00001, elem[0], elem[1])
@@ -144,13 +141,29 @@ export class Game {
             })
             lineGroup.add(this.drawLineLoop(pointArr, lineMaterial))
             shapeGroup.add(this.drawShpae(coordinates, material))
-          })
-        }
-      })
-      this.viewer.scene.add(lineGroup)
-      this.viewer.scene.add(shapeGroup)
-      this.render()
-    })
+          } else if (country.geometry.type === 'MultiPolygon') {
+            country.geometry.coordinates.forEach((polygon: any) => {
+              const pointArr: number[] = []
+              const coordinates = polygon[0] || []
+              if (coordinates.length === 0) return
+              coordinates.forEach((elem: any) => {
+                // const coord = lon2xyz(R * 1.00001, elem[0], elem[1])
+                // pointArr.push(coord.x, coord.y, coord.z)
+                pointArr.push(elem[0], elem[1], 0)
+              })
+              lineGroup.add(this.drawLineLoop(pointArr, lineMaterial))
+              shapeGroup.add(this.drawShpae(coordinates, material))
+            })
+          }
+        })
+        this.viewer.scene.add(lineGroup)
+        this.viewer.scene.add(shapeGroup)
+        this.render()
+      },
+      (xhr) => {
+        this.viewer.onProgress('propagate/data/world.json', xhr)
+      }
+    )
   }
   drawLineLoop = (pointArr: number[], material: THREE.LineBasicMaterial) => {
     const geometry = new THREE.BufferGeometry()

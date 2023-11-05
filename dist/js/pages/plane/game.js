@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 19:16:37
+ * @LastEditTime: 2023-11-05 22:21:42
  */
 import _ from 'lodash';
 import * as THREE from 'three';
@@ -40,11 +40,12 @@ export class Game {
             mousedown: _.throttle(this.mousedown, 60),
             mouseup: _.throttle(this.mouseup, 60)
         };
+        viewer.useLoadingManager();
         this.viewer = viewer;
         this.clock1 = new THREE.Clock();
         this.clock2 = new THREE.Clock();
-        this.gltfLoader = new GLTFLoader(this.viewer.loadmanager);
-        this.textLoader = new THREE.TextureLoader(this.viewer.loadmanager);
+        this.gltfLoader = new GLTFLoader(viewer.loadmanager);
+        this.textLoader = new THREE.TextureLoader(viewer.loadmanager);
         this.textLoader.setCrossOrigin('');
         this.loadSky();
         this.loadPlane();
@@ -61,9 +62,10 @@ export class Game {
                 obstacle.position.y += Math.sin(i) * 40;
                 // obstacle.position.y += (Math.random() * 2 - 1) * 40
                 this.obstacles.add(obstacle);
-                this.render();
             }
+            // console.log('bbbb', this.obstacles, this.obstacle)
             this.viewer.scene.add(this.obstacles);
+            this.render();
         });
     }
     render() {
@@ -119,6 +121,8 @@ export class Game {
             this.viewer.camera.lookAt(this.plane.position);
             // this.viewer.camera.rotateX(-Math.PI / 2)
             this.render();
+        }, (xhr) => {
+            this.viewer.onProgress('microplane.glb', xhr);
         });
     }
     /** 加载障碍物 */
@@ -137,6 +141,8 @@ export class Game {
                 bomb.userData.isCollide = false;
                 this.obstacle.add(bomb);
             }
+        }, (xhr) => {
+            this.viewer.onProgress('bomb.glb', xhr);
         });
         this.gltfLoader.load('star.glb', (glb) => {
             this.star = glb.scene;
@@ -145,6 +151,8 @@ export class Game {
             star.name = 'star';
             star.userData.isCollide = false;
             this.obstacle.add(star);
+        }, (xhr) => {
+            this.viewer.onProgress('star.glb', xhr);
         });
     }
     update() {
