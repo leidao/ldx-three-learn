@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 19:12:38
+ * @LastEditTime: 2023-11-06 11:16:43
  */
 
 import { SlackOutlined } from '@ant-design/icons'
@@ -63,9 +63,14 @@ const Plane = () => {
       <div className="gunplay w-100% h-100%" ref={ref}>
         <div className="play absolute left-50% top-50% z-999 translate-x--50%">
           {!playing && (
-            <Button size="large" icon={<SlackOutlined />} onClick={start}>
-              Play
-            </Button>
+            <div className="text-22px">
+              <div className="mb-14px">按住空格键上升 / 松开空格键下落</div>
+              <div className="flex justify-center">
+                <Button size="large" icon={<SlackOutlined />} onClick={start}>
+                  Play
+                </Button>
+              </div>
+            </div>
           )}
         </div>
         <div className="life absolute left-20px top-10px">

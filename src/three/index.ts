@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-05 22:28:36
+ * @LastEditTime: 2023-11-09 10:07:15
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -17,13 +17,27 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // import SpriteText from 'three-spritetext'
 import { Emit } from './emit'
 import { LoadingBar } from './LoadingBar'
-import { lon2xyz, threeToScreen } from './math'
+import {
+  lon2phi,
+  lon2xyz,
+  startEndQuaternion,
+  threePointToCenter,
+  threeToScreen,
+  xyz2lon
+} from './math'
 import Music from './music'
 export type LoaderManager = {
   onProgress: (assetName: string, xhr: ProgressEvent<EventTarget>) => void
   onError: (error: ErrorEvent) => void
 }
-export { lon2xyz, threeToScreen }
+export {
+  lon2phi,
+  lon2xyz,
+  startEndQuaternion,
+  threePointToCenter,
+  threeToScreen,
+  xyz2lon
+}
 const config = {
   /** 环境光 */
   AMBIENT_LIGHT_COLOR: 0xffffff,
@@ -46,6 +60,8 @@ export default class Viewer extends Emit {
 
   /** 容器 */
   container!: HTMLDivElement
+  /** 平行光 */
+  directionalLight!: THREE.DirectionalLight
   loadmanager!: THREE.LoadingManager
   music: Music
   loadingBar: LoadingBar
@@ -75,7 +91,8 @@ export default class Viewer extends Emit {
     this.camera.position.set(0, 0, 180)
     /** 创建渲染器 */
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true //开启抗锯齿
+      antialias: true, //开启抗锯齿
+      alpha: true // 是否可以设置背景色透明
     })
     this.renderer.setClearColor(0x000000, 0)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -84,18 +101,18 @@ export default class Viewer extends Emit {
     this.container.appendChild(this.renderer.domElement)
 
     /** 创建光照 */
-    const ambientLight = new THREE.AmbientLight(config.AMBIENT_LIGHT_COLOR)
+    const ambientLight = new THREE.AmbientLight(config.AMBIENT_LIGHT_COLOR, 1)
     this.scene.add(ambientLight)
     const obj3d = new THREE.Object3D()
     obj3d.position.set(0, 0, 0)
-    const directionalLight = new THREE.DirectionalLight(
+    this.directionalLight = new THREE.DirectionalLight(
       config.DIRECTIONAL_LIGHT_COLOR,
       1
     )
-    directionalLight.position.set(0, 0, 500)
-    directionalLight.target = obj3d
+    this.directionalLight.position.set(0, 0, 500)
+    this.directionalLight.target = obj3d
     this.scene.add(obj3d)
-    this.scene.add(directionalLight)
+    this.scene.add(this.directionalLight)
   }
   /**
    * @function: 使用控制器
