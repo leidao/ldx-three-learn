@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-05 22:21:42
+ * @LastEditTime: 2023-11-09 22:29:54
  */
 import _ from 'lodash';
 import * as THREE from 'three';
@@ -54,7 +54,7 @@ export class Game {
         this.initBall();
         this.initMusic();
         this.pos = new THREE.Vector3();
-        this.viewer.on('complete', () => {
+        this.viewer.on('load_complete', () => {
             this.obstacles = new THREE.Group();
             for (let i = 0; i < 10; i++) {
                 const obstacle = this.obstacle.clone();
@@ -173,12 +173,13 @@ export class Game {
             this.viewer.camera.position.y =
                 this.plane.position.y + Math.cos(time * 1.5) * 10;
             this.computedCollision(this.pos);
+            // 设置爆炸的动画效果
             this.ballUniforms.u_time.value = time2;
             this.ballUniforms.u_opacity.value = Math.cos(time2);
             this.plane.children.forEach((child) => {
                 child.children.forEach((mesh) => {
                     if (mesh.name === 'propeller') {
-                        mesh.rotation.set(0, 0, Math.cos(time * 80));
+                        mesh.rotation.set(0, 0, this.spaceing ? time * 80 : time2 * 15);
                     }
                 });
             });
@@ -209,30 +210,19 @@ export class Game {
                         mesh.userData.isCollide = true;
                         if (mesh.name === 'star') {
                             this.viewer.music.setPlay('gliss.mp3');
+                            this.viewer.music.setLoop('gliss.mp3', false);
                             this.starNum++;
                             this.viewer.emit('addStar', this.starNum);
                         }
                         else {
+                            this.clock2.start();
                             this.viewer.music.setPlay('explosion.mp3');
+                            this.viewer.music.setLoop('explosion.mp3', false);
                             this.lifeNum--;
                             this.viewer.emit('decLife', this.lifeNum);
                             this.ball.position.set(p3.x, p3.y, p3.z);
+                            this.ball.visible = true;
                             this.viewer.scene.add(this.ball);
-                            this.clock2.start();
-                        }
-                    }
-                });
-            }
-            else {
-                child.children.forEach((mesh) => {
-                    if (mesh.userData.isCollide) {
-                        mesh.userData.isCollide = false;
-                        if (mesh.name === 'star') {
-                            this.viewer.music.setStop('gliss.mp3');
-                        }
-                        else {
-                            this.viewer.music.setStop('explosion.mp3');
-                            this.viewer.scene.remove(this.ball);
                         }
                     }
                 });
@@ -261,6 +251,8 @@ export class Game {
         switch (event.keyCode) {
             case 32:
                 this.spaceing = true;
+                this.viewer.music.setVolume('engine.mp3', 0.5);
+                this.viewer.music.setPlay('engine.mp3');
                 break;
             default:
                 break;
@@ -271,6 +263,8 @@ export class Game {
         switch (event.keyCode) {
             case 32:
                 this.spaceing = false;
+                this.viewer.music.setVolume('engine.mp3', 0.2);
+                // this.viewer.music.setStop('engine.mp3')
                 break;
             default:
                 break;
@@ -286,6 +280,7 @@ export class Game {
     };
     startGame() {
         this.playing = true;
+        this.viewer.music.setVolume('engine.mp3', 0.2);
         this.viewer.music.setPlay('engine.mp3');
     }
     gameOver() {
@@ -298,11 +293,11 @@ export class Game {
         this.viewer.music.setStopAll();
         this.plane.position.set(0, 0, -100);
         this.viewer.camera.position.set(-180, 0, -40);
-        // this.viewer.scene.remove(this.ball)
-        // this.obstacles.children.forEach((child) => {
-        //   child.children.forEach((mesh) => {
-        //     mesh.userData.isCollide = false
-        //   })
-        // })
+        this.viewer.scene.remove(this.ball);
+        this.obstacles.children.forEach((child) => {
+            child.children.forEach((mesh) => {
+                mesh.userData.isCollide = false;
+            });
+        });
     }
 }

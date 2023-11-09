@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-01 14:49:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-06 11:12:22
+ * @LastEditTime: 2023-11-09 22:29:54
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -56,7 +56,7 @@ export class Game {
     this.initBall()
     this.initMusic()
     this.pos = new THREE.Vector3()
-    this.viewer.on('complete', () => {
+    this.viewer.on('load_complete', () => {
       this.obstacles = new THREE.Group()
       for (let i = 0; i < 10; i++) {
         const obstacle = this.obstacle.clone()

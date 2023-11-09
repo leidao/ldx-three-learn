@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-09 10:07:15
+ * @LastEditTime: 2023-11-09 22:30:01
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -180,7 +180,7 @@ export default class Viewer extends Emit {
     }
 
     this.loadmanager.onLoad = () => {
-      this.emit('complete')
+      this.emit('load_complete')
       this.loadingBar.visible = false
     }
     // this.loadmanager.onProgress = () => {

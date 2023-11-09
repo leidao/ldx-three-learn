@@ -2,13 +2,13 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Emit } from './emit';
 import { LoadingBar } from './LoadingBar';
-import { lon2xyz, threeToScreen } from './math';
+import { lon2phi, lon2xyz, startEndQuaternion, threePointToCenter, threeToScreen, xyz2lon } from './math';
 import Music from './music';
 export declare type LoaderManager = {
     onProgress: (assetName: string, xhr: ProgressEvent<EventTarget>) => void;
     onError: (error: ErrorEvent) => void;
 };
-export { lon2xyz, threeToScreen };
+export { lon2phi, lon2xyz, startEndQuaternion, threePointToCenter, threeToScreen, xyz2lon };
 export default class Viewer extends Emit {
     /** 场景 */
     scene: THREE.Scene;
@@ -22,6 +22,8 @@ export default class Viewer extends Emit {
     raycaster: THREE.Raycaster;
     /** 容器 */
     container: HTMLDivElement;
+    /** 平行光 */
+    directionalLight: THREE.DirectionalLight;
     loadmanager: THREE.LoadingManager;
     music: Music;
     loadingBar: LoadingBar;

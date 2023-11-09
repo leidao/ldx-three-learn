@@ -4,7 +4,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * @Author: ldx
  * @Date: 2023-11-03 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 19:12:38
+ * @LastEditTime: 2023-11-06 11:16:43
  */
 import { SlackOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -57,6 +57,6 @@ const Plane = () => {
         setPlay(true);
         game.startGame();
     };
-    return (_jsx("div", { className: "w-100% h-100% relative", children: _jsxs("div", { className: "gunplay w-100% h-100%", ref: ref, children: [_jsx("div", { className: "play absolute left-50% top-50% z-999 translate-x--50%", children: !playing && (_jsx(Button, { size: "large", icon: _jsx(SlackOutlined, {}), onClick: start, children: "Play" })) }), _jsxs("div", { className: "life absolute left-20px top-10px", children: [_jsx("img", { width: 100, height: 60, alt: "\u98DE\u673A", src: planePic }), _jsxs("span", { className: "text-26px text-#fff", children: [life, " "] })] }), _jsxs("div", { className: "star absolute right-20px top-10px", children: [_jsxs("span", { className: "text-26px text-#fff", children: [star, " "] }), _jsx("img", { width: 100, height: 70, src: starPic, alt: "\u661F\u661F" })] })] }) }));
+    return (_jsx("div", { className: "w-100% h-100% relative", children: _jsxs("div", { className: "gunplay w-100% h-100%", ref: ref, children: [_jsx("div", { className: "play absolute left-50% top-50% z-999 translate-x--50%", children: !playing && (_jsxs("div", { className: "text-22px", children: [_jsx("div", { className: "mb-14px", children: "\u6309\u4F4F\u7A7A\u683C\u952E\u4E0A\u5347 / \u677E\u5F00\u7A7A\u683C\u952E\u4E0B\u843D" }), _jsx("div", { className: "flex justify-center", children: _jsx(Button, { size: "large", icon: _jsx(SlackOutlined, {}), onClick: start, children: "Play" }) })] })) }), _jsxs("div", { className: "life absolute left-20px top-10px", children: [_jsx("img", { width: 100, height: 60, alt: "\u98DE\u673A", src: planePic }), _jsxs("span", { className: "text-26px text-#fff", children: [life, " "] })] }), _jsxs("div", { className: "star absolute right-20px top-10px", children: [_jsxs("span", { className: "text-26px text-#fff", children: [star, " "] }), _jsx("img", { width: 100, height: 70, src: starPic, alt: "\u661F\u661F" })] })] }) }));
 };
 export default Plane;

@@ -413,7 +413,7 @@ export class Game {
         value: 20 // 显示当前范围的个数
       },
       uSize: {
-        value: 3 // 粒子大小
+        value: 6 // 粒子大小
       },
       uTotal: {
         value: number // 当前粒子的所有的总数

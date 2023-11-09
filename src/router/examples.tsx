@@ -3,10 +3,11 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:49:21
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-07 23:09:49
+ * @LastEditTime: 2023-11-09 23:33:50
  */
 import React from 'react'
 
+import nebularOrbit from '/nebularOrbit/img/nebularOrbit.png'
 import plane from '/plane/img/plane.png'
 import propagate from '/propagate/img/propagate.png'
 export const examples = [
@@ -41,7 +42,7 @@ export const examples = [
     path: '/nebularOrbit',
     key: 'nebularOrbit',
     component: React.lazy(() => import('@/pages/nebularOrbit')),
-    icon: propagate,
+    icon: nebularOrbit,
     title: '星云轨道',
     hideInMenu: true,
     auth: []

@@ -1,23 +1,29 @@
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /*
  * @Description: 孔子学院全球传播
  * @Author: ldx
  * @Date: 2023-11-03 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 20:58:05
+ * @LastEditTime: 2023-11-09 21:10:32
  */
-import { useEffect, useRef } from 'react';
+import { Radio } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import Viewer from '@/three';
 import { Game } from './game';
 // import { useEffect } from 'react'
 const Propagate = () => {
     const ref = useRef(null);
+    const [value, setValue] = useState('3D');
+    const [game, setGame] = useState();
+    const [viewer, setViewer] = useState();
     useEffect(() => {
         if (!ref.current)
             return;
         const viewer = new Viewer(ref.current);
+        setViewer(viewer);
         viewer.useOrbitControls();
-        viewer.listen();
+        // viewer.listen()
         // viewer.controls.enableRotate = false
         // viewer.controls.minDistance = 50 // 最小距离
         // viewer.controls.maxDistance = 200 // 最大距离
@@ -27,6 +33,7 @@ const Propagate = () => {
         //   RIGHT: THREE.MOUSE.ROTATE
         // }
         const game = new Game(viewer);
+        setGame(game);
         game.startGame();
         let id;
         const animation = () => {
@@ -38,6 +45,81 @@ const Propagate = () => {
             cancelIdleCallback(id);
         };
     }, []);
-    return (_jsx("div", { className: "w-100% h-100% relative", children: _jsx("div", { className: "gunplay w-100% h-100%", ref: ref }) }));
+    return (_jsx("div", { className: "w-100% h-100% relative", children: _jsx("div", { className: "gunplay w-100% h-100% ", ref: ref, children: _jsxs(Radio.Group, { className: "absolute top-20px right-20px z-999", buttonStyle: "solid", value: value, onChange: (e) => {
+                    const value = e.target.value;
+                    if (!game)
+                        return;
+                    let time = value === '2D' ? 0 : 1;
+                    if (value === '2D') {
+                        viewer?.scene.remove(game.group3D);
+                        game.group3D.traverse((child) => {
+                            if (child.name === '3d') {
+                                ;
+                                child.element.style.display = 'none';
+                            }
+                        });
+                        // game.controls.enableZoom = true
+                        game.controls.enablePan = true;
+                        game.controls.enableRotate = false;
+                        game.controls.mouseButtons = {
+                            LEFT: THREE.MOUSE.PAN,
+                            MIDDLE: THREE.MOUSE.DOLLY,
+                            RIGHT: THREE.MOUSE.ROTATE
+                        };
+                    }
+                    else {
+                        viewer?.scene.remove(game.group2D);
+                        game.group2D.traverse((child) => {
+                            if (child.name === '2d') {
+                                ;
+                                child.element.style.display = 'none';
+                            }
+                        });
+                        // game.controls.enableZoom = false
+                        game.controls.enablePan = false;
+                        game.controls.enableRotate = true;
+                        game.controls.mouseButtons = {
+                            LEFT: THREE.MOUSE.ROTATE,
+                            MIDDLE: THREE.MOUSE.DOLLY,
+                            RIGHT: THREE.MOUSE.PAN
+                        };
+                    }
+                    game.controls.reset();
+                    const animation = () => {
+                        if (value === '2D') {
+                            time += 0.01;
+                        }
+                        else {
+                            time -= 0.01;
+                        }
+                        if (time < 1.01 && time > -0.01) {
+                            game.sphere.scale.set(1 + time * 0.8, 1 + time * 0.8, 1 + time * 0.8);
+                            game.customUniforms.mixAmount.value = time;
+                            requestAnimationFrame(animation);
+                        }
+                        else {
+                            if (value === '2D') {
+                                viewer?.scene.add(game.group2D);
+                                game.group2D.traverse((child) => {
+                                    if (child.name === '2d') {
+                                        console.log('yyy');
+                                        child.element.style.display = 'block';
+                                    }
+                                });
+                            }
+                            else {
+                                viewer?.scene.add(game.group3D);
+                                game.group3D.traverse((child) => {
+                                    if (child.name === '3d') {
+                                        ;
+                                        child.element.style.display = 'block';
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    animation();
+                    setValue(value);
+                }, children: [_jsx(Radio.Button, { value: "2D", children: "2D" }), _jsx(Radio.Button, { value: "3D", children: "3D" })] }) }) }));
 };
 export default Propagate;

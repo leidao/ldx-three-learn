@@ -63,7 +63,7 @@ const Propagate = () => {
               viewer?.scene.remove(game.group3D)
               game.group3D.traverse((child) => {
                 if (child.name === '3d') {
-                  child.element!.style.display = 'none'
+                  ;(child as any).element.style.display = 'none'
                 }
               })
 
@@ -80,7 +80,7 @@ const Propagate = () => {
 
               game.group2D.traverse((child) => {
                 if (child.name === '2d') {
-                  child.element!.style.display = 'none'
+                  ;(child as any).element.style.display = 'none'
                 }
               })
               // game.controls.enableZoom = false
@@ -113,14 +113,14 @@ const Propagate = () => {
                   game.group2D.traverse((child) => {
                     if (child.name === '2d') {
                       console.log('yyy')
-                      child.element!.style.display = 'block'
+                      ;(child as any).element.style.display = 'block'
                     }
                   })
                 } else {
                   viewer?.scene.add(game.group3D)
                   game.group3D.traverse((child) => {
                     if (child.name === '3d') {
-                      child.element!.style.display = 'block'
+                      ;(child as any).element.style.display = 'block'
                     }
                   })
                 }
