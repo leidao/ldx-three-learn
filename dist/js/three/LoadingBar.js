@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 18:35:35
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-05 22:27:40
+ * @LastEditTime: 2023-11-10 16:47:15
  */
 import loading from '@/assets/loading.svg';
 class LoadingBar {
@@ -104,9 +104,10 @@ class LoadingBar {
             ploaded += asset.loaded;
             ptotal += asset.total;
         });
-        const progress = (ploaded / 1024 / 1024).toFixed(2);
-        const size = (ptotal / 1024 / 1024).toFixed(2);
-        const delta = Math.floor(ploaded / ptotal) * 100;
+        const progress = +(ploaded / 1024 / 1024).toFixed(2);
+        const size = +(ptotal / 1024 / 1024).toFixed(2);
+        const delta = Math.floor((progress / size) * 100);
+        console.log(assets, ploaded, ptotal, delta, progress, size);
         // this.progress = ploaded / ptotal
         this.text.innerHTML = `当前模型已加载${delta}%(${progress}M),总共${size}M。`;
     }
