@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 18:35:35
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:16:28
+ * @LastEditTime: 2023-11-10 18:44:12
  */
 import loading from '@/assets/loading.svg';
 class LoadingBar {
@@ -97,20 +97,18 @@ class LoadingBar {
         console.log(ploaded, ptotal, this.assets, this.total, this.assets.size);
         return ploaded == ptotal;
     }
-    update(assets) {
-        let ploaded = 0, ptotal = 0;
+    update(assets, loaded, total) {
+        let ploaded = 0;
         this.assets = assets;
         assets.forEach((asset) => {
             ploaded += asset.loaded;
-            ptotal += asset.total;
-            console.log('asset', { ...asset });
         });
+        // console.log('loaded', loaded, total, (loaded / total) * 100)
         const progress = +(ploaded / 1024 / 1024).toFixed(2);
-        const size = +(ptotal / 1024 / 1024).toFixed(2);
-        const delta = Math.floor((ploaded / ptotal) * 100);
-        console.log(assets, ploaded, ptotal, delta, progress, size);
+        const delta = Math.floor((loaded / total) * 100);
+        // console.log(assets, ploaded, ptotal, delta, progress, size)
         // this.progress = ploaded / ptotal
-        this.text.innerHTML = `当前模型已加载${delta}%(${progress}M),总共${size}M。`;
+        this.text.innerHTML = `当前资源已加载${delta}%(${progress}M)。`;
     }
 }
 export { LoadingBar };

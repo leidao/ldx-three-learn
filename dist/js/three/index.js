@@ -1,11 +1,3 @@
-/*
- * @Description: three视图
- * @Author: ldx
- * @Date: 2023-10-26 09:21:40
- * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:15:02
- */
-import _ from 'lodash';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
@@ -158,6 +150,7 @@ export default class Viewer extends Emit {
     // }
     useLoadingManager() {
         const assets = new Map();
+        let loaded = 1, total = 1;
         this.loadmanager = new THREE.LoadingManager();
         this.loadmanager.onStart = () => {
             // console.log('onStart', url, itemsLoaded, itemsTotal)
@@ -167,17 +160,16 @@ export default class Viewer extends Emit {
             this.emit('load_complete');
             this.loadingBar.visible = false;
         };
-        // this.loadmanager.onProgress = () => {
-        // }
+        this.loadmanager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            loaded = itemsLoaded;
+            total = itemsTotal;
+            // console.log('xxxonProgress', loaded, total)
+            this.loadingBar.update(assets, loaded, total);
+        };
         this.loadmanager.onError = (url) => {
             console.log('资源加载出错：', url);
         };
-        const throttle = _.throttle(() => {
-            // console.log('xxx')
-            this.loadingBar.update(assets);
-        }, 60);
         this.onProgress = (assetName, xhr) => {
-            console.log('xhr', xhr);
             const asset = assets.get(assetName);
             if (!asset) {
                 assets.set(assetName, { loaded: xhr.loaded, total: xhr.total });
@@ -186,7 +178,7 @@ export default class Viewer extends Emit {
                 asset.loaded = xhr.loaded;
                 asset.total = xhr.total;
             }
-            throttle();
+            this.loadingBar.update(assets, loaded, total);
         };
     }
 }
