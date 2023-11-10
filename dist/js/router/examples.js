@@ -3,9 +3,10 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:49:21
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-09 23:33:50
+ * @LastEditTime: 2023-11-10 14:59:24
  */
 import React from 'react';
+import factory from '/factory/img/factory.png';
 import nebularOrbit from '/nebularOrbit/img/nebularOrbit.png';
 import plane from '/plane/img/plane.png';
 import propagate from '/propagate/img/propagate.png';
@@ -32,8 +33,8 @@ export const examples = [
         path: '/factory',
         key: 'factory',
         component: React.lazy(() => import('@/pages/factory')),
-        icon: propagate,
-        title: '枪战小游戏',
+        icon: factory,
+        title: '废弃工厂',
         hideInMenu: true,
         auth: []
     },

@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-08 10:49:48
  * @LastEditors: ldx
- * @LastEditTime: 2022-04-08 10:49:51
+ * @LastEditTime: 2023-11-10 10:06:37
  */
 declare module 'slash2'
 declare module '*.css'
@@ -18,7 +18,7 @@ declare module '*.gif'
 declare module '*.bmp'
 declare module '*.tiff'
 declare module 'omit.js'
-
+declare module 'three-pathfinding'
 // google analytics interface
 interface GAFieldsObject {
   eventCategory: string

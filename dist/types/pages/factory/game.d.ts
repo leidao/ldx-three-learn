@@ -12,9 +12,14 @@ export declare class Game {
     fans: THREE.Mesh[];
     navMesh: THREE.Mesh;
     npcHandler: NPCHandler;
+    pathfinder: any;
+    waypoints: THREE.Vector3[];
     constructor(viewer: Viewer);
-    init(): void;
     render(): void;
+    init(): void;
+    /** 加载工厂地图 */
     loadFactory(): void;
+    /** 初始化寻路器 */
+    initPathfinding(navmesh: THREE.Mesh): void;
     update: () => void;
 }

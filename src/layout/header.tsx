@@ -3,9 +3,9 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:38:32
+ * @LastEditTime: 2023-11-10 14:49:40
  */
-
+import github from '@/assets/github.svg'
 const Header = (props: any) => {
   return (
     <div
@@ -17,13 +17,14 @@ const Header = (props: any) => {
       </div>
       {props.children}
       <div>
-        <div>
-          <img
-            className="w-30px h-30px"
-            src="/src/assets/坐席头像.png"
-            alt="头像"
-          />
-          <span className="ml-8px">道哥</span>
+        <div
+          onClick={() => {
+            window.open('https://github.com/leidao/ldx-three-learn')
+          }}
+          className="cursor-pointer"
+        >
+          <img className="w-30px h-30px" src={github} alt="github" />
+          <span className="ml-8px align-middle">给个star呗</span>
         </div>
       </div>
     </div>

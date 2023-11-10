@@ -7093,6 +7093,11 @@ text-table@^0.2.0:
   resolved "http://10.168.1.100:30873/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+three-pathfinding@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/three-pathfinding/-/three-pathfinding-1.2.0.tgz#83b936104e22bc23b34bcf9d15574bbba21257ae"
+  integrity sha512-TlIfy+mLOdP7OhQG4Mn1dNONYbhu2Xe+AD7jL8SbdKdAHxH/TF68svpk2c8UrSfR/3YWQ87Tq/lp5HQO/QuaMw==
+
 three@0.136:
   version "0.136.0"
   resolved "http://10.168.1.100:30873/three/-/three-0.136.0.tgz#b1504db021b46398ef468aa7849f3dcabb814f50"

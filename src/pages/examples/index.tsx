@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:23:44
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 21:39:21
+ * @LastEditTime: 2023-11-10 15:00:33
  */
 // import { useEffect } from 'react'
 
@@ -31,7 +31,7 @@ const Home = () => {
             return (
               <div
                 key={example.path}
-                className="border-1px border-#ebeef5 w-400px cursor-pointer"
+                className="border-1px border-#ebeef5 w-400px cursor-pointer h-268px"
                 style={{ boxShadow: '0 2px 12px 0 rgba(0,0,0,.1)' }}
                 onClick={() => {
                   window.open(`/ldx-three-learn/#${example.path}`)

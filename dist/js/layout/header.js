@@ -4,9 +4,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:38:32
+ * @LastEditTime: 2023-11-10 14:49:40
  */
+import github from '@/assets/github.svg';
 const Header = (props) => {
-    return (_jsxs("div", { className: "flex justify-between h-52px items-center px-20px bg-#fff z-999", style: { boxShadow: '0 0 6px #ddd' }, children: [_jsx("div", { children: _jsx("span", { className: "text-22px", children: "3D\u6848\u4F8B" }) }), props.children, _jsx("div", { children: _jsxs("div", { children: [_jsx("img", { className: "w-30px h-30px", src: "/src/assets/\u5750\u5E2D\u5934\u50CF.png", alt: "\u5934\u50CF" }), _jsx("span", { className: "ml-8px", children: "\u9053\u54E5" })] }) })] }));
+    return (_jsxs("div", { className: "flex justify-between h-52px items-center px-20px bg-#fff z-999", style: { boxShadow: '0 0 6px #ddd' }, children: [_jsx("div", { children: _jsx("span", { className: "text-22px", children: "3D\u6848\u4F8B" }) }), props.children, _jsx("div", { children: _jsxs("div", { onClick: () => {
+                        window.open('https://github.com/leidao/ldx-three-learn');
+                    }, className: "cursor-pointer", children: [_jsx("img", { className: "w-30px h-30px", src: github, alt: "github" }), _jsx("span", { className: "ml-8px align-middle", children: "\u7ED9\u4E2Astar\u5457" })] }) })] }));
 };
 export default Header;
