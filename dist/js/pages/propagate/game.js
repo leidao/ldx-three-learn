@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-09 21:09:53
+ * @LastEditTime: 2023-11-10 17:48:51
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';

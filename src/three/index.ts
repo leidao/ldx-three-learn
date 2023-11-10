@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 17:41:56
+ * @LastEditTime: 2023-11-10 18:00:15
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -191,8 +191,9 @@ export default class Viewer extends Emit {
       console.log('资源加载出错：', url)
     }
     const throttle = _.throttle(() => {
+      // console.log('xxx')
       this.loadingBar.update(assets)
-    }, 10)
+    }, 60)
     this.onProgress = (assetName, xhr) => {
       const asset = assets.get(assetName)
       if (!asset) {
