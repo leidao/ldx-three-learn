@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-03 23:58:01
+ * @LastEditTime: 2023-11-10 16:11:49
  */
 import React from 'react';
 import Layout from '@/layout';
@@ -30,7 +30,7 @@ export const routes = [
     {
         path: '/roadnet',
         key: 'roadnet',
-        component: React.lazy(() => import('@/pages/home')),
+        component: React.lazy(() => import('@/pages/roadnet')),
         icon: '',
         title: '路网编辑器',
         hideInMenu: false,

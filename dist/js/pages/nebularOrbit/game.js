@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-07 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-09 23:30:48
+ * @LastEditTime: 2023-11-10 15:12:00
  */
 import * as THREE from 'three';
 import { CSS3DRenderer, CSS3DSprite } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
@@ -25,12 +25,12 @@ export class Game {
         this.textLoader = new THREE.TextureLoader(viewer.loadmanager);
         this.textLoader.setCrossOrigin('');
         this.fileLoader = new THREE.FileLoader(viewer.loadmanager);
-        viewer.scene.add(this.group);
         this.init();
         viewer.on('load_complete', () => {
             this.group.rotation.set(-Math.PI / 2.6, -Math.PI / 8, 0);
             this.group.position.set(10, 30, 0);
             this.group.scale.set(1.16, 1.16, 1.16);
+            viewer.scene.add(this.group);
         });
     }
     init() {
@@ -133,11 +133,11 @@ export class Game {
                 point.element.addEventListener('click', () => {
                     if (currentDom) {
                         const imgDom = currentDom.getElementsByClassName('circle-img')[0];
-                        imgDom.src = 'nebularOrbit/img/point.png';
+                        imgDom.src = '/nebularOrbit/img/point.png';
                         imgDom.style.transform = 'scale(1)';
                     }
                     const imgDom = point.element.getElementsByClassName('circle-img')[0];
-                    imgDom.src = 'nebularOrbit/img/point_active.png';
+                    imgDom.src = '/nebularOrbit/img/point_active.png';
                     imgDom.style.transform = 'scale(2)';
                     currentDom = point.element;
                     const index = +(point.element.getAttribute('_pointIndex') || 0);

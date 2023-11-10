@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 14:49:40
+ * @LastEditTime: 2023-11-10 15:18:18
  */
 import github from '@/assets/github.svg'
 const Header = (props: any) => {
@@ -24,7 +24,7 @@ const Header = (props: any) => {
           className="cursor-pointer"
         >
           <img className="w-30px h-30px" src={github} alt="github" />
-          <span className="ml-8px align-middle">给个star呗</span>
+          {/* <span className="ml-8px align-middle">给个star呗</span> */}
         </div>
       </div>
     </div>

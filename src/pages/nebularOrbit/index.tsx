@@ -3,12 +3,13 @@
  * @Author: ldx
  * @Date: 2023-11-07 23:33:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-09 23:31:32
+ * @LastEditTime: 2023-11-10 15:12:56
  */
 
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
+import 星球 from '/nebularOrbit/img/星球.png'
 import Viewer from '@/three'
 
 import { Game, I_DeedData } from './game'
@@ -50,7 +51,7 @@ const Propagate = () => {
       <div
         className="mask fixed top--325px right--404px w-1291px h-1293px"
         style={{
-          backgroundImage: `url('/nebularOrbit/img/星球.png')`,
+          backgroundImage: `url(${星球})`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: '100% 100%',
           backgroundPosition: '-100px -100px',

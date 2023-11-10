@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 21:56:29
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 00:50:08
+ * @LastEditTime: 2023-11-10 15:26:39
  */
 import { Layout, Menu } from 'antd'
 const { Sider } = Layout
@@ -151,9 +151,10 @@ const NavMenu: React.FC<Props> = ({
     <Sider
       style={{
         flex: mode === 'horizontal' ? 1 : '0 0',
-        background: theme === 'dark' ? '#000' : '#fff'
+        background: theme === 'dark' ? '#000' : '#fff',
+        height: `calc(100vh - 250px)`
       }}
-      width={mode === 'horizontal' ? '100%' : '200px'}
+      width={mode === 'horizontal' ? '100%' : '256px'}
       className="bg-#000"
     >
       <Menu

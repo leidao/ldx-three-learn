@@ -4,7 +4,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * @Author: ldx
  * @Date: 2022-04-06 21:56:29
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 00:50:08
+ * @LastEditTime: 2023-11-10 15:26:39
  */
 import { Layout, Menu } from 'antd';
 const { Sider } = Layout;
@@ -107,7 +107,8 @@ const NavMenu = ({ mode = 'vertical', theme = 'dark', routes }) => {
     };
     return (_jsx(Sider, { style: {
             flex: mode === 'horizontal' ? 1 : '0 0',
-            background: theme === 'dark' ? '#000' : '#fff'
-        }, width: mode === 'horizontal' ? '100%' : '200px', className: "bg-#000", children: _jsx(Menu, { className: "h-100%", onOpenChange: onOpenChange, theme: theme, mode: mode === 'horizontal' ? 'horizontal' : 'inline', selectedKeys: defaultMenu, openKeys: openKey, children: renderChildren(routes) }) }));
+            background: theme === 'dark' ? '#000' : '#fff',
+            height: `calc(100vh - 250px)`
+        }, width: mode === 'horizontal' ? '100%' : '256px', className: "bg-#000", children: _jsx(Menu, { className: "h-100%", onOpenChange: onOpenChange, theme: theme, mode: mode === 'horizontal' ? 'horizontal' : 'inline', selectedKeys: defaultMenu, openKeys: openKey, children: renderChildren(routes) }) }));
 };
 export default NavMenu;
