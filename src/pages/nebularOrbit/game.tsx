@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-07 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 15:12:00
+ * @LastEditTime: 2023-11-10 16:21:21
  */
 import * as THREE from 'three'
 import {
@@ -16,6 +16,8 @@ export interface I_DeedData {
 }
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
+import point_current from '/nebularOrbit/img/point.png'
+import point_active from '/nebularOrbit/img/point_active.png'
 import Viewer from '@/three'
 export class Game {
   clock: THREE.Clock
@@ -32,16 +34,16 @@ export class Game {
     viewer.useLoadingManager()
     this.clock = new THREE.Clock()
     this.group = new THREE.Group()
+    this.group.rotation.set(-Math.PI / 2.6, -Math.PI / 8, 0)
+    this.group.position.set(10, 30, 0)
+    this.group.scale.set(1.16, 1.16, 1.16)
+    viewer.scene.add(this.group)
+
     this.textLoader = new THREE.TextureLoader(viewer.loadmanager)
     this.textLoader.setCrossOrigin('')
     this.fileLoader = new THREE.FileLoader(viewer.loadmanager)
     this.init()
-    viewer.on('load_complete', () => {
-      this.group.rotation.set(-Math.PI / 2.6, -Math.PI / 8, 0)
-      this.group.position.set(10, 30, 0)
-      this.group.scale.set(1.16, 1.16, 1.16)
-      viewer.scene.add(this.group)
-    })
+    // viewer.on('load_complete', () => {})
   }
   init() {
     const { width, height } = this.viewer.container.getBoundingClientRect()
@@ -165,13 +167,13 @@ export class Game {
               const imgDom = currentDom.getElementsByClassName(
                 'circle-img'
               )[0] as HTMLImageElement
-              imgDom.src = '/nebularOrbit/img/point.png'
+              imgDom.src = point_current
               imgDom.style.transform = 'scale(1)'
             }
             const imgDom = point.element.getElementsByClassName(
               'circle-img'
             )[0] as HTMLImageElement
-            imgDom.src = '/nebularOrbit/img/point_active.png'
+            imgDom.src = point_active
             imgDom.style.transform = 'scale(2)'
             currentDom = point.element
 
@@ -207,7 +209,7 @@ export class Game {
 
     const html = `
   <div style="position:relative;top:10px;left:0;width:60px;height:60px;cursor: pointer;">
-    <img class="circle-img" width=60 height=60 style="position:relative;top:0;left:0;transition:0.5s;" src='/nebularOrbit/img/point.png' />
+    <img class="circle-img" width=60 height=60 style="position:relative;top:0;left:0;transition:0.5s;" src='${point_current}' />
     <div class="circle-text" style="width:80px;position:relative;top:-18px;left:0;color:#fff; text-align: center;font-size:12px">${data.time}</div>
   </div>
 `
