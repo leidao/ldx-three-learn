@@ -177,6 +177,7 @@ export default class Viewer extends Emit {
             this.loadingBar.update(assets);
         }, 60);
         this.onProgress = (assetName, xhr) => {
+            console.log('xhr', xhr);
             const asset = assets.get(assetName);
             if (!asset) {
                 assets.set(assetName, { loaded: xhr.loaded, total: xhr.total });
