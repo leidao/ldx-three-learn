@@ -9,6 +9,6 @@ declare class LoadingBar {
     set visible(value: boolean);
     get total(): number;
     get loaded(): boolean;
-    update(assets: Map<string, any>, loaded: number, total: number): void;
+    update(assets: Map<string, any>): void;
 }
 export { LoadingBar };

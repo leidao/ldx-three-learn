@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 18:35:35
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:44:12
+ * @LastEditTime: 2023-11-10 18:51:20
  */
 import loading from '@/assets/loading.svg';
 class LoadingBar {
@@ -97,7 +97,7 @@ class LoadingBar {
         console.log(ploaded, ptotal, this.assets, this.total, this.assets.size);
         return ploaded == ptotal;
     }
-    update(assets, loaded, total) {
+    update(assets) {
         let ploaded = 0;
         this.assets = assets;
         assets.forEach((asset) => {
@@ -105,10 +105,10 @@ class LoadingBar {
         });
         // console.log('loaded', loaded, total, (loaded / total) * 100)
         const progress = +(ploaded / 1024 / 1024).toFixed(2);
-        const delta = Math.floor((loaded / total) * 100);
+        // const delta = Math.floor((loaded / total) * 100)
         // console.log(assets, ploaded, ptotal, delta, progress, size)
         // this.progress = ploaded / ptotal
-        this.text.innerHTML = `当前资源已加载${delta}%(${progress}M)。`;
+        this.text.innerHTML = `当前资源已加载${progress}M。`;
     }
 }
 export { LoadingBar };

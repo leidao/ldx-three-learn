@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:46:43
+ * @LastEditTime: 2023-11-10 18:51:50
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -184,8 +184,8 @@ export default class Viewer extends Emit {
   // }
   useLoadingManager() {
     const assets = new Map()
-    let loaded = 1,
-      total = 1
+    // let loaded = 1,
+    //   total = 1
     this.loadmanager = new THREE.LoadingManager()
     this.loadmanager.onStart = () => {
       // console.log('onStart', url, itemsLoaded, itemsTotal)
@@ -196,12 +196,11 @@ export default class Viewer extends Emit {
       this.emit('load_complete')
       this.loadingBar.visible = false
     }
-    this.loadmanager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      loaded = itemsLoaded
-      total = itemsTotal
+    this.loadmanager.onProgress = () => {
+      // loaded = itemsLoaded
+      // total = itemsTotal
       // console.log('xxxonProgress', loaded, total)
-
-      this.loadingBar.update(assets, loaded, total)
+      // this.loadingBar.update(assets, loaded, total)
     }
     this.loadmanager.onError = (url) => {
       console.log('资源加载出错：', url)
@@ -215,7 +214,7 @@ export default class Viewer extends Emit {
         asset.loaded = xhr.loaded
         asset.total = xhr.total
       }
-      this.loadingBar.update(assets, loaded, total)
+      this.loadingBar.update(assets)
     }
   }
 }
