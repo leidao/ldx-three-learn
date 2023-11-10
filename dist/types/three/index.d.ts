@@ -45,6 +45,7 @@ export default class Viewer extends Emit {
      * @function: 自适应窗口
      */
     onResize: () => void;
+    restoreContext(): void;
     listen: () => void;
     destroy: () => void;
     useLoadingManager(): void;

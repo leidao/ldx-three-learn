@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:00:15
+ * @LastEditTime: 2023-11-10 18:15:02
  */
 import _ from 'lodash';
 import * as THREE from 'three';
@@ -90,6 +90,7 @@ export default class Viewer extends Emit {
         this.directionalLight.target = obj3d;
         this.scene.add(obj3d);
         this.scene.add(this.directionalLight);
+        this.restoreContext();
     }
     /**
      * @function: 使用控制器
@@ -119,6 +120,15 @@ export default class Viewer extends Emit {
         this.camera.updateProjectionMatrix();
         this.render();
     };
+    restoreContext() {
+        const canvas = this.renderer.domElement;
+        canvas.addEventListener('webglcontextlost', (event) => {
+            event.preventDefault();
+            setTimeout(() => {
+                this.renderer.forceContextRestore();
+            }, 1);
+        });
+    }
     listen = () => {
         window.addEventListener('resize', this.onResize);
     };

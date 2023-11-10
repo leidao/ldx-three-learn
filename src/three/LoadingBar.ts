@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 18:35:35
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 17:56:56
+ * @LastEditTime: 2023-11-10 18:16:28
  */
 import loading from '@/assets/loading.svg'
 class LoadingBar {
@@ -108,12 +108,13 @@ class LoadingBar {
     assets.forEach((asset) => {
       ploaded += asset.loaded
       ptotal += asset.total
+      console.log('asset', { ...asset })
     })
 
     const progress = +(ploaded / 1024 / 1024).toFixed(2)
     const size = +(ptotal / 1024 / 1024).toFixed(2)
     const delta = Math.floor((ploaded / ptotal) * 100)
-    // console.log(ploaded, ptotal, delta, progress, size)
+    console.log(assets, ploaded, ptotal, delta, progress, size)
 
     // this.progress = ploaded / ptotal
     this.text.innerHTML = `当前模型已加载${delta}%(${progress}M),总共${size}M。`
