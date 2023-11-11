@@ -3,10 +3,11 @@
  * @Author: ldx
  * @Date: 2023-11-07 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 16:57:01
+ * @LastEditTime: 2023-11-11 19:40:13
  */
 import * as THREE from 'three';
 import { CSS3DRenderer, CSS3DSprite } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import point_current from '/nebularOrbit/img/point.png';
 import point_active from '/nebularOrbit/img/point_active.png';
 export class Game {
@@ -21,16 +22,16 @@ export class Game {
     isRotate = true;
     constructor(viewer) {
         this.viewer = viewer;
-        viewer.useLoadingManager();
+        // viewer.useLoadingManager()
         this.clock = new THREE.Clock();
         this.group = new THREE.Group();
         this.group.rotation.set(-Math.PI / 2.6, -Math.PI / 8, 0);
         this.group.position.set(10, 30, 0);
         this.group.scale.set(1.16, 1.16, 1.16);
         viewer.scene.add(this.group);
-        this.textLoader = new THREE.TextureLoader(viewer.loadmanager);
+        this.textLoader = new THREE.TextureLoader();
         this.textLoader.setCrossOrigin('');
-        this.fileLoader = new THREE.FileLoader(viewer.loadmanager);
+        this.fileLoader = new THREE.FileLoader();
         this.init();
         // viewer.on('load_complete', () => {})
     }
@@ -77,8 +78,6 @@ export class Game {
         this.textLoader.load('背景星空图.png', (texture) => {
             this.viewer.scene.background = texture;
             this.render();
-        }, (xhr) => {
-            this.viewer.onProgress('背景星空图.png', xhr);
         });
     }
     /** 创建星云 */
@@ -96,8 +95,6 @@ export class Game {
             plane.rotation.set(0, 0, 0);
             this.group.add(plane);
             this.render();
-        }, (xhr) => {
-            this.viewer.onProgress('生平-背景圈.png', xhr);
         });
         // return plane
     }
@@ -155,8 +152,6 @@ export class Game {
                 this.group.add(point);
                 this.render();
             }
-        }, (xhr) => {
-            this.viewer.onProgress('孔子生平.json', xhr);
         });
     }
     createPoint(data, index) {
@@ -189,8 +184,6 @@ export class Game {
             const geometry = new THREE.PlaneGeometry(200, 200);
             const mesh = new THREE.Mesh(geometry, material);
             this.viewer.scene.add(mesh);
-        }, (xhr) => {
-            this.viewer.onProgress('星球.png', xhr);
         });
     }
     update = () => {

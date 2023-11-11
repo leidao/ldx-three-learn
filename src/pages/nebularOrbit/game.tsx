@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-07 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 16:57:01
+ * @LastEditTime: 2023-11-11 19:40:13
  */
 import * as THREE from 'three'
 import {
@@ -14,7 +14,7 @@ export interface I_DeedData {
   time: string
   description: string
 }
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import point_current from '/nebularOrbit/img/point.png'
 import point_active from '/nebularOrbit/img/point_active.png'
@@ -31,7 +31,7 @@ export class Game {
   isRotate = true
   constructor(viewer: Viewer) {
     this.viewer = viewer
-    viewer.useLoadingManager()
+    // viewer.useLoadingManager()
     this.clock = new THREE.Clock()
     this.group = new THREE.Group()
     this.group.rotation.set(-Math.PI / 2.6, -Math.PI / 8, 0)
@@ -39,9 +39,9 @@ export class Game {
     this.group.scale.set(1.16, 1.16, 1.16)
     viewer.scene.add(this.group)
 
-    this.textLoader = new THREE.TextureLoader(viewer.loadmanager)
+    this.textLoader = new THREE.TextureLoader()
     this.textLoader.setCrossOrigin('')
-    this.fileLoader = new THREE.FileLoader(viewer.loadmanager)
+    this.fileLoader = new THREE.FileLoader()
     this.init()
     // viewer.on('load_complete', () => {})
   }
@@ -86,39 +86,27 @@ export class Game {
   /** 加载天空 */
   loadSky() {
     this.textLoader.setPath('nebularOrbit/img/')
-    this.textLoader.load(
-      '背景星空图.png',
-      (texture) => {
-        this.viewer.scene.background = texture
-        this.render()
-      },
-      (xhr) => {
-        this.viewer.onProgress('背景星空图.png', xhr)
-      }
-    )
+    this.textLoader.load('背景星空图.png', (texture) => {
+      this.viewer.scene.background = texture
+      this.render()
+    })
   }
   /** 创建星云 */
   createCircle() {
     this.textLoader.setPath('nebularOrbit/img/')
-    this.textLoader.load(
-      '生平-背景圈.png',
-      (texture) => {
-        texture.encoding = THREE.sRGBEncoding
-        const material = new THREE.MeshBasicMaterial({
-          map: texture,
-          transparent: true,
-          opacity: 0.5
-        })
-        const geometry = new THREE.PlaneGeometry(230, 240)
-        const plane = new THREE.Mesh(geometry, material)
-        plane.rotation.set(0, 0, 0)
-        this.group.add(plane)
-        this.render()
-      },
-      (xhr) => {
-        this.viewer.onProgress('生平-背景圈.png', xhr)
-      }
-    )
+    this.textLoader.load('生平-背景圈.png', (texture) => {
+      texture.encoding = THREE.sRGBEncoding
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.5
+      })
+      const geometry = new THREE.PlaneGeometry(230, 240)
+      const plane = new THREE.Mesh(geometry, material)
+      plane.rotation.set(0, 0, 0)
+      this.group.add(plane)
+      this.render()
+    })
 
     // return plane
   }
@@ -139,69 +127,56 @@ export class Game {
   /** 创建线段 */
   createLine() {
     this.fileLoader.setPath('nebularOrbit/data/')
-    this.fileLoader.load(
-      '孔子生平.json',
-      (file: any) => {
-        const deeds = (JSON.parse(file) || {}).lifetime || []
+    this.fileLoader.load('孔子生平.json', (file: any) => {
+      const deeds = (JSON.parse(file) || {}).lifetime || []
 
-        const arc = new THREE.ArcCurve(
-          0,
-          0,
-          80.5,
-          1.6,
-          1.6 + 2 * Math.PI,
-          false
-        )
-        const allPointArr = arc.getPoints(270)
-        const pointArr = []
-        for (let i = 0; i < 27; i++) {
-          const pointIndex = i * 10
-          pointArr.push(allPointArr[pointIndex])
-        }
-        let currentDom: HTMLElement
-        for (let i = 0; i < pointArr.length; i++) {
-          const vector = pointArr[i]
-          const point = this.createPoint(deeds[i], i)
-          ;(point.element as HTMLDivElement).addEventListener('click', () => {
-            if (currentDom) {
-              const imgDom = currentDom.getElementsByClassName(
-                'circle-img'
-              )[0] as HTMLImageElement
-              imgDom.src = point_current
-              imgDom.style.transform = 'scale(1)'
-            }
-            const imgDom = point.element.getElementsByClassName(
+      const arc = new THREE.ArcCurve(0, 0, 80.5, 1.6, 1.6 + 2 * Math.PI, false)
+      const allPointArr = arc.getPoints(270)
+      const pointArr = []
+      for (let i = 0; i < 27; i++) {
+        const pointIndex = i * 10
+        pointArr.push(allPointArr[pointIndex])
+      }
+      let currentDom: HTMLElement
+      for (let i = 0; i < pointArr.length; i++) {
+        const vector = pointArr[i]
+        const point = this.createPoint(deeds[i], i)
+        ;(point.element as HTMLDivElement).addEventListener('click', () => {
+          if (currentDom) {
+            const imgDom = currentDom.getElementsByClassName(
               'circle-img'
             )[0] as HTMLImageElement
-            imgDom.src = point_active
-            imgDom.style.transform = 'scale(2)'
-            currentDom = point.element
+            imgDom.src = point_current
+            imgDom.style.transform = 'scale(1)'
+          }
+          const imgDom = point.element.getElementsByClassName(
+            'circle-img'
+          )[0] as HTMLImageElement
+          imgDom.src = point_active
+          imgDom.style.transform = 'scale(2)'
+          currentDom = point.element
 
-            const index = +(point.element.getAttribute('_pointIndex') || 0)
-            const data = deeds[index]
-            this.viewer.emit('point_click', data)
-          })
-          ;(point.element as HTMLDivElement).addEventListener(
-            'mouseenter',
-            () => {
-              this.isRotate = false
-            }
-          )
-          ;(point.element as HTMLDivElement).addEventListener(
-            'mouseleave',
-            () => {
-              this.isRotate = true
-            }
-          )
-          point.position.set(vector.x, vector.y, 0)
-          this.group.add(point)
-          this.render()
-        }
-      },
-      (xhr) => {
-        this.viewer.onProgress('孔子生平.json', xhr)
+          const index = +(point.element.getAttribute('_pointIndex') || 0)
+          const data = deeds[index]
+          this.viewer.emit('point_click', data)
+        })
+        ;(point.element as HTMLDivElement).addEventListener(
+          'mouseenter',
+          () => {
+            this.isRotate = false
+          }
+        )
+        ;(point.element as HTMLDivElement).addEventListener(
+          'mouseleave',
+          () => {
+            this.isRotate = true
+          }
+        )
+        point.position.set(vector.x, vector.y, 0)
+        this.group.add(point)
+        this.render()
       }
-    )
+    })
   }
   createPoint(data: I_DeedData, index: number | string) {
     const divEle = document.createElement('div') as HTMLDivElement
@@ -224,23 +199,17 @@ export class Game {
   }
   creatPlan() {
     this.textLoader.setPath('nebularOrbit/img/')
-    this.textLoader.load(
-      '星球.png',
-      (texturt) => {
-        const material = new THREE.MeshBasicMaterial({
-          transparent: true,
-          opacity: 0.8,
-          side: THREE.DoubleSide,
-          map: texturt
-        })
-        const geometry = new THREE.PlaneGeometry(200, 200)
-        const mesh = new THREE.Mesh(geometry, material)
-        this.viewer.scene.add(mesh)
-      },
-      (xhr) => {
-        this.viewer.onProgress('星球.png', xhr)
-      }
-    )
+    this.textLoader.load('星球.png', (texturt) => {
+      const material = new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0.8,
+        side: THREE.DoubleSide,
+        map: texturt
+      })
+      const geometry = new THREE.PlaneGeometry(200, 200)
+      const mesh = new THREE.Mesh(geometry, material)
+      this.viewer.scene.add(mesh)
+    })
   }
   update = () => {
     const dt = this.clock.getDelta()

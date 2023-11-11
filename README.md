@@ -1,5 +1,5 @@
 ### 访问
-- https://leidao.github.io/ldx-three-learn/#/examples
+- https://ldx18015816566.gitee.io/ldx-three-learn/#/examples
 ### 简介
 - 这是我工作和学习中遇到的有趣的案例，我将它们作为我的个人展示区。我会每年保持一定的更新频率，希望大家能喜欢。
 ### 规划

@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:23:44
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 15:42:17
+ * @LastEditTime: 2023-11-11 19:53:36
  */
 // import { useEffect } from 'react'
 
@@ -24,7 +24,8 @@ const Home = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(374px, 1fr))',
             gridTemplateRows: 'repeat(1, 268px)',
-            gap: '10px 12px'
+            gap: '10px 12px',
+            overflow: 'auto'
           }}
         >
           {examples.map((example: RoutesType) => {

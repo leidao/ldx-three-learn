@@ -3,9 +3,10 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 15:18:18
+ * @LastEditTime: 2023-11-11 19:52:08
  */
-import github from '@/assets/github.svg'
+// import github from '@/assets/github.svg'
+import gitee from '@/assets/gitee.svg'
 const Header = (props: any) => {
   return (
     <div
@@ -19,11 +20,11 @@ const Header = (props: any) => {
       <div>
         <div
           onClick={() => {
-            window.open('https://github.com/leidao/ldx-three-learn')
+            window.open('https://gitee.com/ldx18015816566/ldx-three-learn')
           }}
           className="cursor-pointer"
         >
-          <img className="w-30px h-30px" src={github} alt="github" />
+          <img className="w-70px h-30px" src={gitee} alt="github" />
           {/* <span className="ml-8px align-middle">给个star呗</span> */}
         </div>
       </div>

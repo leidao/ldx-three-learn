@@ -6,7 +6,8 @@ const Home = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(374px, 1fr))',
                     gridTemplateRows: 'repeat(1, 268px)',
-                    gap: '10px 12px'
+                    gap: '10px 12px',
+                    overflow: 'auto'
                 }, children: examples.map((example) => {
                     return (_jsxs("div", { className: "border-1px border-#ebeef5 w-378px cursor-pointer h-268px", style: { boxShadow: '0 2px 12px 0 rgba(0,0,0,.1)' }, onClick: () => {
                             window.open(`/ldx-three-learn/#${example.path}`);

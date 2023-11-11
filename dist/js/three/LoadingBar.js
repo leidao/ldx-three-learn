@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-04 18:35:35
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-11 19:28:01
+ * @LastEditTime: 2023-11-11 19:39:17
  */
 import loading from '@/assets/loading.svg';
 class LoadingBar {
@@ -109,7 +109,7 @@ class LoadingBar {
         const delta = Math.floor((ploaded / ptotal) * 100);
         // console.log(assets, ploaded, ptotal, delta, progress, size)
         // this.progress = ploaded / ptotal
-        this.text.innerHTML = `当前已加载${delta}%(${progress}M),总共${size}M。`;
+        this.text.innerHTML = `当前已加载$${progress}M。`;
     }
 }
 export { LoadingBar };
