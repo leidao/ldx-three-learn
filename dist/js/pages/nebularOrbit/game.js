@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-07 19:09:27
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-11 19:40:13
+ * @LastEditTime: 2023-11-11 20:14:05
  */
 import * as THREE from 'three';
 import { CSS3DRenderer, CSS3DSprite } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
