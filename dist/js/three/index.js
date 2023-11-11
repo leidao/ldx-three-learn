@@ -161,12 +161,12 @@ export default class Viewer extends Emit {
             this.emit('load_complete');
             this.loadingBar.visible = false;
         };
-        this.loadmanager.onProgress = () => {
-            // loaded = itemsLoaded
-            // total = itemsTotal
-            // console.log('xxxonProgress', loaded, total)
-            // this.loadingBar.update(assets, loaded, total)
-        };
+        // this.loadmanager.onProgress = () => {
+        // loaded = itemsLoaded
+        // total = itemsTotal
+        // console.log('xxxonProgress', loaded, total)
+        // this.loadingBar.update(assets, loaded, total)
+        // }
         this.loadmanager.onError = (url) => {
             console.log('资源加载出错：', url);
         };

@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 18:51:50
+ * @LastEditTime: 2023-11-11 19:34:25
  */
 import _ from 'lodash'
 import * as THREE from 'three'
@@ -196,12 +196,12 @@ export default class Viewer extends Emit {
       this.emit('load_complete')
       this.loadingBar.visible = false
     }
-    this.loadmanager.onProgress = () => {
-      // loaded = itemsLoaded
-      // total = itemsTotal
-      // console.log('xxxonProgress', loaded, total)
-      // this.loadingBar.update(assets, loaded, total)
-    }
+    // this.loadmanager.onProgress = () => {
+    // loaded = itemsLoaded
+    // total = itemsTotal
+    // console.log('xxxonProgress', loaded, total)
+    // this.loadingBar.update(assets, loaded, total)
+    // }
     this.loadmanager.onError = (url) => {
       console.log('资源加载出错：', url)
     }
