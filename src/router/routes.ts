@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 16:11:49
+ * @LastEditTime: 2023-11-15 12:22:52
  */
 import React from 'react'
 
@@ -39,6 +39,15 @@ export const routes = [
     auth: []
   },
   {
+    path: '/TShirt/entry',
+    key: 'TShirt.entry',
+    component: React.lazy(() => import('@/pages/TShirt/entry')),
+    icon: '',
+    title: 'T恤图案编辑器',
+    hideInMenu: false,
+    auth: []
+  },
+  {
     /* 无匹配路由 放置在最后一个路由的位置 */
     path: '*',
     key: '*',
@@ -52,7 +61,16 @@ export default [
     component: Layout,
     routes: routes
   },
-  ...examples
+  ...examples,
+  {
+    path: '/TShirt',
+    key: 'TShirt',
+    component: React.lazy(() => import('@/pages/TShirt')),
+    icon: '',
+    title: 'T恤图案编辑器',
+    hideInMenu: true,
+    auth: []
+  }
 ]
 export interface RoutesType {
   path: string
