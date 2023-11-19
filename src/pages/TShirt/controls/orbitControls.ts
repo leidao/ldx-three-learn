@@ -3,8 +3,8 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:27:07
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-15 12:27:24
+ * @LastEditTime: 2023-11-19 13:48:37
  */
-import { EventDispatcner } from '../core/enevtDispatcher'
+import { EventDispatcher } from '../core/eventDispatcher'
 
-export class OrbitControls extends EventDispatcner {}
+export class OrbitControls extends EventDispatcher {}

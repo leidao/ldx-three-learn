@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:28:05
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-15 21:56:54
+ * @LastEditTime: 2023-11-19 10:49:13
  */
 
 import { Matrix3 } from '../math/matrix3'
@@ -24,7 +24,7 @@ export class Camera {
     } = this
     return new Matrix3().scale(1 / zoom, 1 / zoom).translate(-x, -y)
   }
-  /* 使用视图投影矩阵变换物体*/
+  /* 使用视图投影矩阵变换物体 */
   transformInvert(ctx: CanvasRenderingContext2D) {
     const {
       position: { x, y },
