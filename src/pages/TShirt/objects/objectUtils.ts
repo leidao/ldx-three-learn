@@ -3,11 +3,11 @@
  * @Author: ldx
  * @Date: 2023-11-19 16:05:57
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-19 16:06:06
+ * @LastEditTime: 2023-11-20 09:20:24
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
-
+/** 根据矩阵绘制路径 */
 export function crtPathByMatrix(
   ctx: CanvasRenderingContext2D,
   vertices: number[],

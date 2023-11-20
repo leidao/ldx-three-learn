@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-19 16:00:20
+ * @LastEditTime: 2023-11-20 10:08:49
  */
 import { Object2D, Object2DType } from '../core/object2D'
 import { Matrix3 } from '../math/matrix3'
@@ -82,7 +82,14 @@ export class Img extends Object2D {
 
     //样式
     style.apply(ctx)
-
+    /**
+     * 在画布指定位置绘制原图
+      ctx.drawimage(image, dx, dy);
+      在画布指定位置按原图大小绘制指定大小的图
+      ctx.drawimage(image, dx, dy, dwidth, dheight);
+      剪切图像，并在画布上绘制被剪切的部分
+      ctx.drawimage(image, sx, sy, swidth, sheight, dx, dy, dwidth, dheight);
+     */
     // 绘制图像
     if (view) {
       ctx.drawImage(
