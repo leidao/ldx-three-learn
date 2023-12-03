@@ -3,12 +3,12 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-20 10:08:49
+ * @LastEditTime: 2023-12-03 16:18:34
  */
-import { Object2D, Object2DType } from '../core/object2D'
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
 import { BasicStyle, BasicStyleType } from '../style/basicStyle'
+import { Object2D, Object2DType } from './object2D'
 import { crtPathByMatrix } from './objectUtils'
 
 type ImgType = Object2DType & {
@@ -36,7 +36,6 @@ export class Img extends Object2D {
 
   // 类型
   readonly isImg = true
-
   constructor(attr: ImgType = {}) {
     super()
     this.setOption(attr)
@@ -113,6 +112,6 @@ export class Img extends Object2D {
     const {
       size: { x: imgW, y: imgH }
     } = this
-    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix)
+    crtPathByMatrix(ctx, [0, 0, imgW, 0, imgW, imgH, 0, imgH], matrix, true)
   }
 }

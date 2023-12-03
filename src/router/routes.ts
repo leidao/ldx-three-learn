@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-15 12:22:52
+ * @LastEditTime: 2023-12-01 13:47:13
  */
 import React from 'react'
 
@@ -39,11 +39,20 @@ export const routes = [
     auth: []
   },
   {
-    path: '/TShirt/entry',
-    key: 'TShirt.entry',
-    component: React.lazy(() => import('@/pages/TShirt/entry')),
+    path: '/tShirt/entry',
+    key: 'tShirt.entry',
+    component: React.lazy(() => import('@/pages/tShirt/entry')),
     icon: '',
     title: 'T恤图案编辑器',
+    hideInMenu: false,
+    auth: []
+  },
+  {
+    path: '/circuit/entry',
+    key: 'circuit.entry',
+    component: React.lazy(() => import('@/pages/circuit/entry')),
+    icon: '',
+    title: '电路图编辑器',
     hideInMenu: false,
     auth: []
   },
@@ -63,11 +72,20 @@ export default [
   },
   ...examples,
   {
-    path: '/TShirt',
-    key: 'TShirt',
-    component: React.lazy(() => import('@/pages/TShirt')),
+    path: '/tShirt',
+    key: 'tShirt',
+    component: React.lazy(() => import('@/pages/tShirt')),
     icon: '',
     title: 'T恤图案编辑器',
+    hideInMenu: true,
+    auth: []
+  },
+  {
+    path: '/circuit',
+    key: 'circuit',
+    component: React.lazy(() => import('@/pages/circuit')),
+    icon: '',
+    title: '电路图编辑器',
     hideInMenu: true,
     auth: []
   }

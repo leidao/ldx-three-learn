@@ -3,14 +3,14 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-19 13:50:40
+ * @LastEditTime: 2023-12-03 19:10:09
  */
+import { EventDispatcher } from '../core/eventDispatcher'
+import { Scene } from '../core/scene'
 import { generateUUID } from '../math/mathUtils.js'
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
-import { Group } from '../objects/group'
-import { EventDispatcher } from './eventDispatcher'
-import { Scene } from './scene'
+import { Group } from './group'
 
 export type Object2DType = {
   position?: Vector2
@@ -25,28 +25,28 @@ export type Object2DType = {
 }
 
 export class Object2D extends EventDispatcher {
-  // 自定义属性
+  /** 自定义属性 */
   [key: string]: any
-  // 位置
+  /** 位置 */
   position = new Vector2()
-  // 旋转
+  /** 旋转 */
   rotate = 0
-  // 缩放
+  /** 缩放 */
   scale = new Vector2(1, 1)
-  // 可见性
+  /** 可见性 */
   visible = true
-  // 渲染顺序
+  /** 渲染顺序 */
   index = 0
-  // 名称
+  /** 名称 */
   name = ''
-  // 父级
+  /** 父级 */
   parent: Scene | Group | undefined
-  // 是否受相机影响-只适用于Scene的children元素
+  /** 是否受相机影响-只适用于Scene的children元素 */
   enableCamera = true
-  // UUID
+  /** UUID */
   uuid = generateUUID()
 
-  // 类型
+  /** 类型 */
   readonly isObject2D = true
 
   /* 本地模型矩阵 */
@@ -92,6 +92,7 @@ export class Object2D extends EventDispatcher {
   /* 先变换(缩放+旋转)后位移 */
   transform(ctx: CanvasRenderingContext2D) {
     const { position, rotate, scale } = this
+    // translate/rotate/scale执行顺序，从后往前执行
     ctx.translate(position.x, position.y)
     ctx.rotate(rotate)
     ctx.scale(scale.x, scale.y)
