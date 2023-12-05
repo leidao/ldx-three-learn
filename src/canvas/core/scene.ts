@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-03 19:09:00
+ * @LastEditTime: 2023-12-05 14:18:57
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -76,7 +76,10 @@ export class Scene extends Group {
     } = this
     ctx.save()
     // 清理画布
+
     autoClear && ctx.clearRect(0, 0, width, height)
+    ctx.fillStyle = '#f4f4f4'
+    ctx.fillRect(0, 0, width, height)
     // 裁剪坐标系：将canvas坐标系的原点移动到canvas画布中心
     ctx.translate(width / ratio / 2, height / ratio / 2)
     // 渲染子对象

@@ -19,7 +19,7 @@
     "@wangeditor/plugin-link-card": "^1.0.0",
     "@wangeditor/plugin-upload-attachment": "^1.0.0",
     "ahooks": "^3.3.0",
-    "antd": "4.19.2",
+    "antd": "^4.24.15",
     "immer": "^9.0.15",
     "katex": "^0.15.3",
     "less-plugin-import-node-modules": "^1.0.0",

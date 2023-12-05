@@ -3,15 +3,16 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-03 17:24:48
+ * @LastEditTime: 2023-12-03 22:18:09
  */
 import _ from 'lodash'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Img, ImgControler, OrbitControler, Scene, Vector2 } from '@/canvas'
 
 const Home = () => {
   const ref = useRef<HTMLCanvasElement>(null)
+  const [cursor, setCursor] = useState('default')
   useEffect(() => {
     /* 场景 */
     const scene = new Scene()
@@ -80,6 +81,16 @@ const Home = () => {
       scene.render()
       // requestAnimationFrame(ani)
     }
+    // 选中框可以在另一个canvas上，并且鼠标样式用css控制而不是canvas绘制性能可能更好？
+    const updateMouseCursor = () => {
+      if (imgControler.mouseState) {
+        setCursor('none')
+      } else if (imgHover) {
+        setCursor('pointer')
+      } else {
+        setCursor('default')
+      }
+    }
     if (!ref.current) return
 
     let imgHover: Img | null
@@ -111,6 +122,7 @@ const Home = () => {
           orbitControler.pointerdown(event)
           imgHover = scene.selectObj(mp)
           imgControler.pointerdown(imgHover, mp)
+          updateMouseCursor()
         }
       }
       /** 鼠标移动 */
@@ -118,7 +130,9 @@ const Home = () => {
         const { clientX, clientY } = event
         mouseClipPos.copy(scene.clientToClip(clientX, clientY))
         orbitControler.pointermove(event)
+        imgHover = scene.selectObj(mouseClipPos)
         imgControler.pointermove(mouseClipPos)
+        updateMouseCursor()
       }
       /** 鼠标松开 */
       const pointerup = (event: PointerEvent) => {
@@ -129,7 +143,7 @@ const Home = () => {
       return {
         wheel: _.throttle(wheel, 60),
         pointerdown: _.throttle(pointerdown, 60),
-        pointermove: _.throttle(pointermove, 60),
+        pointermove: _.throttle(pointermove, 0),
         pointerup: _.throttle(pointerup, 60)
       }
     })()
@@ -153,7 +167,11 @@ const Home = () => {
   }, [])
   return (
     <div className="w-100% h-100% overflow-hidden">
-      <canvas ref={ref} className="w-100% h-100%"></canvas>
+      <canvas
+        ref={ref}
+        className="w-100% h-100%"
+        style={{ cursor: cursor }}
+      ></canvas>
     </div>
   )
 }

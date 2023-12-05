@@ -1,3 +1,11 @@
+/*
+ * @Description: 选中状态
+ * @Author: ldx
+ * @Date: 2023-11-15 12:24:05
+ * @LastEditors: ldx
+ * @LastEditTime: 2023-12-03 19:29:12
+ */
+
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
 import { Img } from '../objects/img'

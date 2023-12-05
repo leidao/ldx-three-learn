@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:27:07
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-03 15:20:50
+ * @LastEditTime: 2023-12-05 08:49:09
  */
 
 import { Camera } from '../core/camera'
@@ -32,8 +32,6 @@ type Option = {
 export class OrbitControler extends EventDispatcher {
   /** 相机 */
   camera: Camera
-  /** 容器 */
-  domElement: HTMLCanvasElement
   /** 允许缩放 */
   enableZoom = true
   /** 缩放速度 */
@@ -46,6 +44,10 @@ export class OrbitControler extends EventDispatcher {
 
   /** 是否正在拖拽中 */
   panning = false
+  /** 最小缩放值 */
+  minZoom = Infinity
+  /** 最大缩放值 */
+  maxZoom = Infinity
 
   //变换相机前的暂存数据
   stage: Stage = {
@@ -59,14 +61,9 @@ export class OrbitControler extends EventDispatcher {
     pointermove: (event: PointerEvent) => void
     pointerup: (event: PointerEvent) => void
   }
-  constructor(
-    camera: Camera,
-    domElement: HTMLCanvasElement,
-    option: Option = {}
-  ) {
+  constructor(camera: Camera, option: Option = {}) {
     super()
     this.camera = camera
-    this.domElement = domElement
     this.setOption(option)
   }
 
@@ -84,11 +81,17 @@ export class OrbitControler extends EventDispatcher {
     }
     stage.cameraZoom = camera.zoom
     const scale = Math.pow(0.95, zoomSpeed)
+
     if (deltaY > 0) {
+      if (camera.zoom > this.maxZoom) return
+
       camera.zoom /= scale
     } else {
+      if (camera.zoom < this.minZoom) return
+
       camera.zoom *= scale
     }
+
     const _changeEvent = {
       type: 'change',
       target: event
@@ -118,7 +121,7 @@ export class OrbitControler extends EventDispatcher {
   }
 
   /* 位移 */
-  pointermove = (event: PointerEvent) => {
+  pointermove = (event: PointerEvent, type = 'xy') => {
     const { clientX: cx, clientY: cy } = event
     const {
       enablePan,
@@ -132,7 +135,11 @@ export class OrbitControler extends EventDispatcher {
     if (!enablePan || !panning) {
       return
     }
-    position.copy(cameraPosition.clone().add(new Vector2(x - cx, y - cy)))
+    position.copy(
+      cameraPosition
+        .clone()
+        .add(new Vector2(type === 'y' ? 0 : x - cx, type === 'x' ? 0 : y - cy))
+    )
 
     const _changeEvent = {
       type: 'change',

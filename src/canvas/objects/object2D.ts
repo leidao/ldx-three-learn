@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-03 19:10:09
+ * @LastEditTime: 2023-12-04 21:44:20
  */
 import { EventDispatcher } from '../core/eventDispatcher'
 import { Scene } from '../core/scene'
@@ -102,6 +102,12 @@ export class Object2D extends EventDispatcher {
   remove() {
     const { parent } = this
     parent && parent.remove(this)
+  }
+  show() {
+    this.visible = true
+  }
+  hidden() {
+    this.visible = false
   }
 
   /* 获取场景 */
