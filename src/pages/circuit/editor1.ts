@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 12:57:30
+ * @LastEditTime: 2023-12-07 13:29:35
  */
 
 import _ from 'lodash'
@@ -57,9 +57,6 @@ export class Editor {
   selectImg!: null | HTMLImageElement
   /** 事件 */
 
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
   constructor(option: Option) {
     this.option = option
     this.init()

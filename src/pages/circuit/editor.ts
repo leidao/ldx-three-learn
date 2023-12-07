@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 12:24:34
+ * @LastEditTime: 2023-12-07 13:29:31
  */
 
 import _ from 'lodash'
@@ -44,9 +44,6 @@ export class Editor {
   selectImg!: null | HTMLImageElement
   /** 事件 */
 
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
   constructor(option: Option) {
     this.option = option
     this.init()
@@ -77,8 +74,8 @@ export class Editor {
       const pattern = new Img({
         image,
         position: new Vector2(100, 100),
-        size: new Vector2(70, 50),
-        offset: new Vector2(70, 50).multiplyScalar(-0.5)
+        size: new Vector2(70, 50)
+        // offset: new Vector2(70, 50).multiplyScalar(-0.5)
       })
       this.scene.add(pattern)
       this.scene.render()
@@ -146,12 +143,18 @@ export class Editor {
   /** 鼠标按下 */
   pointerdown = (event: PointerEvent) => {
     const { button, clientX, clientY } = event
+    console.log(
+      '=====',
+      event.offsetX - this.scene.camera.position.x,
+      event.offsetY - this.scene.camera.position.y
+    )
+
     if (button === 0) {
       this.isPanning = true
       this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
       if (this.toolOperation === 'line') {
         this.mouseStart.copy(this.scene.clientToClip(clientX, clientY))
-        console.log(' this.mouseStart', this.mouseStart)
+        // console.log(' this.mouseStart', this.mouseStart)
 
         if (this.line) {
           const [y, x] = [...this.line.points].reverse()

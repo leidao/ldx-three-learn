@@ -3,14 +3,14 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:07:17
+ * @LastEditTime: 2023-12-07 13:35:54
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
 import { Group } from '../objects/group'
 import { Img } from '../objects/img'
 import { Object2D } from '../objects/object2D'
-import { Camera } from './camera'
+import { Camera, ratio } from './camera'
 
 type SceneType = {
   domElement?: HTMLCanvasElement
@@ -39,9 +39,7 @@ export class Scene extends Group {
     super()
     this.setOption(attr)
   }
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
+
   get domElement() {
     return this._domElement
   }
@@ -59,15 +57,21 @@ export class Scene extends Group {
   updateViewPort(width: number, height: number) {
     this.domElement.style.width = width + 'px'
     this.domElement.style.height = height + 'px'
-    this.domElement.width = width * this.ratio
-    this.domElement.height = height * this.ratio
+    this.domElement.width = width * ratio
+    this.domElement.height = height * ratio
     this.ctx = this.domElement.getContext('2d') as CanvasRenderingContext2D
-    this.ctx.scale(this.ratio, this.ratio)
+    // this.ctx.save()
+    // this.ctx.scale(this.ratio, this.ratio)
+    // this.ctx.restore()
   }
 
   /* 设置属性 */
   setOption(attr: SceneType) {
     for (const [key, val] of Object.entries(attr)) {
+      if (key === 'offset') {
+        const offset = val as number
+        this.camera.position.set(offset, offset)
+      }
       this[key] = val
     }
   }
@@ -79,8 +83,7 @@ export class Scene extends Group {
       ctx,
       camera,
       children,
-      autoClear,
-      offset
+      autoClear
     } = this
     ctx.save()
     // 清理画布
@@ -90,7 +93,7 @@ export class Scene extends Group {
     ctx.fillRect(0, 0, width, height)
 
     // 裁剪坐标系：将canvas坐标系的原点移动到canvas画布中心
-    ctx.translate(offset, offset)
+
     // 渲染子对象
     for (const obj of children) {
       ctx.save()
@@ -130,7 +133,7 @@ export class Scene extends Group {
 
   /* 基于某个坐标系，判断某个点是否在图形内 */
   isPointInObj(obj: Object2D, mp: Vector2, matrix: Matrix3 = new Matrix3()) {
-    const { ctx, ratio } = this
+    const { ctx } = this
     ctx.save()
     ctx.beginPath()
     // 画布缩放了，这里进行矩阵计算时要调整回来
