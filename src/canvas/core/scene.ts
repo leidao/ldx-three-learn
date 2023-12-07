@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-05 14:18:57
+ * @LastEditTime: 2023-12-07 13:07:17
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -16,6 +16,7 @@ type SceneType = {
   domElement?: HTMLCanvasElement
   camera?: Camera
   autoClear?: boolean
+  offset?: number
 }
 
 export class Scene extends Group {
@@ -29,6 +30,8 @@ export class Scene extends Group {
   camera = new Camera()
   /** 是否自动清理画布 */
   autoClear = true
+  /** 裁剪偏移指 */
+  offset = 0
   // 类型
   readonly isScene = true
 
@@ -47,8 +50,13 @@ export class Scene extends Group {
       return
     }
     this._domElement = value
-    const width = this._domElement.clientWidth
-    const height = this._domElement.clientHeight
+    const container = this._domElement.parentElement
+    if (!container) return
+    const width = container.clientWidth
+    const height = container.clientHeight
+    this.updateViewPort(width, height)
+  }
+  updateViewPort(width: number, height: number) {
     this.domElement.style.width = width + 'px'
     this.domElement.style.height = height + 'px'
     this.domElement.width = width * this.ratio
@@ -72,7 +80,7 @@ export class Scene extends Group {
       camera,
       children,
       autoClear,
-      ratio
+      offset
     } = this
     ctx.save()
     // 清理画布
@@ -80,8 +88,9 @@ export class Scene extends Group {
     autoClear && ctx.clearRect(0, 0, width, height)
     ctx.fillStyle = '#f4f4f4'
     ctx.fillRect(0, 0, width, height)
+
     // 裁剪坐标系：将canvas坐标系的原点移动到canvas画布中心
-    ctx.translate(width / ratio / 2, height / ratio / 2)
+    ctx.translate(offset, offset)
     // 渲染子对象
     for (const obj of children) {
       ctx.save()
@@ -91,6 +100,7 @@ export class Scene extends Group {
       obj.draw(ctx)
       ctx.restore()
     }
+
     ctx.restore()
   }
 
@@ -103,17 +113,19 @@ export class Scene extends Group {
 
   /* canvas坐标转裁剪坐标 */
   canvastoClip({ x, y }: Vector2) {
-    const {
-      domElement: { width, height },
-      ratio
-    } = this
-
-    return new Vector2(x - width / ratio / 2, y - height / ratio / 2)
+    const { offset } = this
+    return new Vector2(x - offset, y - offset)
   }
 
   /* client坐标转裁剪坐标 */
   clientToClip(clientX: number, clientY: number) {
     return this.canvastoClip(this.clientToCanvas(clientX, clientY))
+  }
+  /* client坐标转相机坐标 */
+  clientToCoord(clientX: number, clientY: number) {
+    return this.canvastoClip(
+      this.clientToCanvas(clientX, clientY)
+    ).applyMatrix3(this.camera.pvMatrix.invert())
   }
 
   /* 基于某个坐标系，判断某个点是否在图形内 */

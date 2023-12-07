@@ -310,10 +310,9 @@ export class Vector2 {
     return this
   }
 
-  toArray(array: number[], offset = 0) {
+  toArray(array: number[] = [], offset = 0) {
     array[offset] = this.x
     array[offset + 1] = this.y
-
     return array
   }
 
@@ -353,6 +352,9 @@ export class Vector2 {
     } else {
       return ang
     }
+  }
+  isEmpty() {
+    return this.x !== Infinity && this.y !== Infinity
   }
 
   applyMatrix3(m: Matrix3) {

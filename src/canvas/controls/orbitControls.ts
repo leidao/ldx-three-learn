@@ -3,11 +3,12 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:27:07
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-05 08:49:09
+ * @LastEditTime: 2023-12-07 12:25:28
  */
 
 import { Camera } from '../core/camera'
 import { EventDispatcher } from '../core/eventDispatcher'
+import { Scene } from '../core/scene'
 import { Vector2 } from '../math/vector2'
 /* change 事件 */
 // const _changeEvent = { type: 'change' }
@@ -21,17 +22,21 @@ type Stage = {
 
 /* 配置项 */
 type Option = {
-  camera?: Camera
   enableZoom?: boolean
   zoomSpeed?: number
   enablePan?: boolean
   panSpeed?: number
+  /** 最小缩放值 */
+  minZoom?: number
+  /** 最大缩放值 */
+  maxZoom?: number
 }
 
 /* 相机轨道控制 */
 export class OrbitControler extends EventDispatcher {
   /** 相机 */
   camera: Camera
+  scene: Scene
   /** 允许缩放 */
   enableZoom = true
   /** 缩放速度 */
@@ -48,7 +53,8 @@ export class OrbitControler extends EventDispatcher {
   minZoom = Infinity
   /** 最大缩放值 */
   maxZoom = Infinity
-
+  /** 是否以鼠标为中心缩放 */
+  scaleForMouse = false
   //变换相机前的暂存数据
   stage: Stage = {
     cameraZoom: 1,
@@ -61,9 +67,10 @@ export class OrbitControler extends EventDispatcher {
     pointermove: (event: PointerEvent) => void
     pointerup: (event: PointerEvent) => void
   }
-  constructor(camera: Camera, option: Option = {}) {
+  constructor(camera: Camera, scene: Scene, option: Option = {}) {
     super()
     this.camera = camera
+    this.scene = scene
     this.setOption(option)
   }
 
@@ -74,7 +81,7 @@ export class OrbitControler extends EventDispatcher {
 
   /* 缩放 */
   wheel = (event: WheelEvent) => {
-    const { deltaY } = event
+    const { deltaY, clientX, clientY } = event
     const { enableZoom, camera, zoomSpeed, stage } = this
     if (!enableZoom) {
       return
@@ -91,6 +98,16 @@ export class OrbitControler extends EventDispatcher {
 
       camera.zoom *= scale
     }
+    // const diffZoom = camera.zoom - stage.cameraZoom
+    // const x = (clientX - )
+    // console.log('event', event)
+    // const clip = this.scene.clientToClip(clientX, clientY)
+    // const coord = this.scene.clientToCoord(clientX, clientY)
+    // const move = coord.sub(clip)
+    //
+    // console.log('scene', clip.x, coord.x, -coord.x - clip.x)
+
+    // camera.position.set(-coord.x + clip.x, -coord.y + clip.y)
 
     const _changeEvent = {
       type: 'change',
@@ -121,7 +138,7 @@ export class OrbitControler extends EventDispatcher {
   }
 
   /* 位移 */
-  pointermove = (event: PointerEvent, type = 'xy') => {
+  pointermove = (event: PointerEvent) => {
     const { clientX: cx, clientY: cy } = event
     const {
       enablePan,
@@ -135,11 +152,8 @@ export class OrbitControler extends EventDispatcher {
     if (!enablePan || !panning) {
       return
     }
-    position.copy(
-      cameraPosition
-        .clone()
-        .add(new Vector2(type === 'y' ? 0 : x - cx, type === 'x' ? 0 : y - cy))
-    )
+
+    position.copy(cameraPosition.clone().add(new Vector2(x - cx, y - cy)))
 
     const _changeEvent = {
       type: 'change',

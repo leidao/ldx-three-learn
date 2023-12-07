@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 14:45:22
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-04 01:21:39
+ * @LastEditTime: 2023-12-06 10:47:43
  */
 import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
@@ -58,8 +58,8 @@ export default defineConfig({
     open: true,
     // 接口代理地址设置
     proxy: {
-      '/api/v1/': {
-        target: 'http://10.168.1.100:30100/',
+      '/components/': {
+        target: 'http://192.168.100.2:8089/',
         // rewrite: (path) => path.replace(/^\/api\/v1/, ''),
         changeOrigin: true
       }

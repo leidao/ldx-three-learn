@@ -17,7 +17,7 @@ interface Request {
 
 //创建实例
 const request = axios.create({
-  baseURL: '/api/v1',
+  baseURL: '/components',
   timeout: 1000 * 60 // 60s后请求超时
 })
 

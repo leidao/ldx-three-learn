@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-05 14:07:33
+ * @LastEditTime: 2023-12-05 16:53:35
  */
 import { Dropdown, Space } from 'antd'
 import { useEffect, useState } from 'react'
@@ -21,52 +21,59 @@ type Props = {
   editor: Editor | undefined
 }
 const Tool: React.FC<Props> = ({ className, editor }) => {
-  const [selected, setselected] = useState('')
+  const [selected, setselected] = useState('panning')
+  if (!editor) return <div></div>
   // useEffect(() => {}, [])
   const items: any = [
     { label: '菜单项一', key: 'item-1' },
     { label: '菜单项二', key: 'item-2' }
   ]
+  const styleFn = (value: string) => {
+    return {
+      background: selected === value ? '#1890ff' : '',
+      color: selected === value ? '#fff' : '#000'
+    }
+  }
   return (
     <div className={`${className} flex justify-center items-center`}>
       <div className="flex-1 flex items-center ">
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={{
-            background: selected === 'SelectOutlined' ? '#1890ff' : '',
-            color: selected === 'SelectOutlined' ? '#fff' : '#000'
+          style={styleFn('selected')}
+          onClick={() => {
+            setselected('selected')
+            editor.toolOperation = 'selected'
           }}
-          onClick={() => setselected('SelectOutlined')}
         >
           <SelectOutlined></SelectOutlined>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={{
-            background: selected === 'TextFilled' ? '#1890ff' : '',
-            color: selected === 'TextFilled' ? '#fff' : '#000'
+          style={styleFn('text')}
+          onClick={() => {
+            setselected('text')
+            editor.toolOperation = 'text'
           }}
-          onClick={() => setselected('TextFilled')}
         >
           <TextFilled></TextFilled>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={{
-            background: selected === 'HandOutlined' ? '#1890ff' : '',
-            color: selected === 'HandOutlined' ? '#fff' : '#000'
+          style={styleFn('panning')}
+          onClick={() => {
+            setselected('panning')
+            editor.toolOperation = 'panning'
           }}
-          onClick={() => setselected('HandOutlined')}
         >
           <HandOutlined></HandOutlined>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={{
-            background: selected === 'LineOutlined' ? '#1890ff' : '',
-            color: selected === 'LineOutlined' ? '#fff' : '#000'
+          style={styleFn('line')}
+          onClick={() => {
+            setselected('line')
+            editor.toolOperation = 'line'
           }}
-          onClick={() => setselected('LineOutlined')}
         >
           <LineOutlined></LineOutlined>
         </div>

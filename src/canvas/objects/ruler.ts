@@ -47,6 +47,8 @@ export type RulerConfig = {
   zoom: number
 }
 export class Ruler extends Object2D {
+  /** 渲染顺序 */
+  index = Infinity
   /** 可见性 */
   config: RulerConfig
   /** 不受相机影响 */
@@ -66,10 +68,11 @@ export class Ruler extends Object2D {
     const { viewportWidth, viewportHeight, w } = config
 
     ctx.save()
-    ctx.translate(
-      -config.width / window.devicePixelRatio / 2,
-      -config.height / window.devicePixelRatio / 2
-    )
+    // ctx.translate(
+    //   -config.width / window.devicePixelRatio / 2 - config.w,
+    //   -config.height / window.devicePixelRatio / 2 - config.w
+    // )
+    ctx.translate(-config.w, -config.w)
     // 绘制背景
     ctx.fillStyle = '#fff'
 
@@ -107,25 +110,19 @@ export class Ruler extends Object2D {
     const zoom = config.zoom
     const stepInScene = getStepByZoom(zoom)
 
-    let startXInScene = (config.x - config.viewportWidth) / zoom
+    let startXInScene = config.x / zoom
     startXInScene = getClosestTimesVal(startXInScene, stepInScene)
 
     const endX = config.width
     let endXInScene = (config.x + endX) / zoom
     endXInScene = getClosestTimesVal(endXInScene, stepInScene)
 
-    // ctx.textAlign = 'center'
-    const offsetX = -config.viewportWidth / 2
-    // const offsety = -config.height / window.devicePixelRatio / 2
     const y = config.w
-
     while (startXInScene <= endXInScene) {
       ctx.strokeStyle = '#c1c1c1'
       ctx.fillStyle = '#c1c1c1'
       const x =
-        nearestPixelVal((startXInScene - config.x / zoom) * zoom) +
-        config.w -
-        offsetX
+        nearestPixelVal((startXInScene - config.x / zoom) * zoom) + config.w
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x, y - config.h)
@@ -151,7 +148,7 @@ export class Ruler extends Object2D {
     const stepInScene = getStepByZoom(zoom)
 
     // const startY = config.w
-    let startYInScene = (config.y - config.viewportHeight) / zoom
+    let startYInScene = config.y / zoom
     startYInScene = getClosestTimesVal(startYInScene, stepInScene)
 
     const endY = config.height
@@ -159,13 +156,10 @@ export class Ruler extends Object2D {
     endYInScene = getClosestTimesVal(endYInScene, stepInScene)
     const x = config.w
     // ctx.textAlign = 'center'
-    const offsetY = -config.viewportHeight / 2
     while (startYInScene <= endYInScene) {
       ctx.fillStyle = '#c1c1c1'
       const y =
-        nearestPixelVal((startYInScene - config.y / zoom) * zoom) +
-        config.w -
-        offsetY
+        nearestPixelVal((startYInScene - config.y / zoom) * zoom) + config.w
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x - config.h, y)
