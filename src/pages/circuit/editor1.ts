@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:29:35
+ * @LastEditTime: 2023-12-07 14:03:20
  */
 
 import _ from 'lodash'
@@ -11,7 +11,6 @@ import _ from 'lodash'
 import { Img, Line, OrbitControler, Scene, Vector2 } from '@/canvas'
 import { Ruler } from '@/canvas/objects/ruler'
 
-import vcc from './imgs/electricity/vcc.svg'
 type Option = {
   container: HTMLDivElement
 }
@@ -43,7 +42,6 @@ export class Editor {
   /** 缩放速度 */
   zoomSpeed = 1
   /** 缩放比例 */
-  scale = 1
   /** canvas元素 */
   domElement!: HTMLCanvasElement
   /* 鼠标的裁剪坐标位 */
@@ -69,96 +67,19 @@ export class Editor {
     this.domElement = canvas
     this.scene = new Scene()
     this.scene.setOption({ domElement: canvas, offset: 0 })
-    const rulerConfig = {
-      width: this.scene.domElement.width,
-      height: this.scene.domElement.height,
-      viewportWidth: this.scene.domElement.clientWidth,
-      viewportHeight: this.scene.domElement.clientHeight,
-      offset: 30, // 刻度线的间隔
-      x: 0, // 刻度尺x坐标位置,坐标原点在左上角
-      y: 0, // 刻度尺y坐标位置,坐标原点在左上角
-      w: 20, // 标尺的高度
-      h: 16, // 刻度线基础高度
-      zoom: 1
-    }
-    // const image = new Image()
-    // image.src = vcc
-    // image.onload = () => {
-    //   const pattern = new Img({
-    //     image,
-    //     position: new Vector2(100, 100),
-    //     size: new Vector2(70, 50),
-    //     offset: new Vector2(70, 50).multiplyScalar(-0.5)
-    //   })
-    //   this.scene.add(pattern)
-    //   this.scene.render()
-    // }
 
-    // this.ruler = new Ruler(rulerConfig)
-    // this.scene.add(this.ruler)
-    // this.orbitControler = new OrbitControler(this.scene.camera, this.scene)
-    // this.orbitControler.maxZoom = 10
-    // this.orbitControler.minZoom = 0.1
-    this.scene.render()
+    this.paint()
     this.draw()
-
-    // const { config } = this.ruler
-    // let zoom = 1
-    // this.orbitControler.addEventListener('change', (event) => {
-    //   // console.log('event', event)
-    //   const { target } = event
-    //   switch (target.type) {
-    //     case 'pointermove':
-    //       const position = this.scene.camera.position
-    //       config.x = position.x
-    //       config.y = position.y
-    //       break
-    //     case 'wheel':
-    //       const scale = Math.pow(0.95, this.orbitControler.zoomSpeed)
-    //       if (target.deltaY > 0) {
-    //         zoom *= scale
-    //       } else {
-    //         zoom /= scale
-    //       }
-    //       config.zoom = zoom
-    //       break
-    //     default:
-    //       break
-    //   }
-    //   // const { clientX, clientY } = target
-    //   // const clip = this.scene.clientToClip(clientX, clientY)
-    //   // const coord = this.scene.clientToCoord(clientX, clientY)
-    //   // const move = coord.sub(clip)
-
-    //   // console.log('scene', clip, coord, move)
-    //   // this.scene.ctx.save()
-    //   // this.scene.ctx.translate(move.x, move.y)
-    //   this.scene.render()
-
-    //   // this.scene.ctx.restore()
-    // })
 
     this.listen()
   }
   /** 缩放 */
   wheel = _.throttle((e: WheelEvent) => {
-    // if (event.ctrlKey || event.metaKey) {
-    //   this.orbitControler.wheel(event)
-    // } else {
-    //   const down = new PointerEvent('pointerdown', { clientX: 0, clientY: 0 })
-    //   this.orbitControler.pointerdown(down)
-    //   const move = new PointerEvent('pointermove', {
-    //     clientX: -event.deltaX,
-    //     clientY: -event.deltaY
-    //   })
-    //   this.orbitControler.pointermove(move)
-    //   this.orbitControler.pointerup()
-    // }
     e.preventDefault()
 
     this.mousePosition.x = e.offsetX // 记录当前鼠标点击的横坐标
     this.mousePosition.y = e.offsetY // 记录当前鼠标点击的纵坐标
-    if (e.deltaY > 0) {
+    if (e.deltaY < 0) {
       // 放大
       this.scale = parseFloat((this.scaleStep + this.scale).toFixed(2)) // 解决小数点运算丢失精度的问题
       if (this.scale > this.maxScale) {
@@ -192,26 +113,8 @@ export class Editor {
   }
   /** 鼠标按下 */
   pointerdown = (e: PointerEvent) => {
-    // const { button, clientX, clientY } = event
-    // if (button === 0) {
-    //   this.isPanning = true
-    //   this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
-    //   if (this.toolOperation === 'line') {
-    //     this.mouseStart.copy(this.scene.clientToClip(clientX, clientY))
-    //     console.log(' this.mouseStart', this.mouseStart)
+    console.log('bbbb', e.offsetX - this.offset.x, e.offsetY - this.offset.y)
 
-    //     if (this.line) {
-    //       const [y, x] = [...this.line.points].reverse()
-    //       const deltaX = Math.abs(this.mouseStart.x - x)
-    //       const deltaY = Math.abs(this.mouseStart.y - y)
-    //       const max = Math.max(deltaX, deltaY)
-    //       const mouseX = max === deltaX ? this.mouseStart.x : x
-    //       const mouseY = max === deltaY ? this.mouseStart.y : y
-    //       this.line.addPoints([mouseX, mouseY])
-    //       this.scene.render()
-    //     }
-    //   }
-    // }
     if (e.button === 0) {
       this.isPanning = true
       // 鼠标左键
@@ -221,44 +124,16 @@ export class Editor {
   }
   /** 鼠标移动 */
   pointermove = _.throttle((e: PointerEvent) => {
-    // const { clientX, clientY } = event
-    // this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
-    // this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
-    // // 绘制线段
-    // if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {
-    //   const [x, y] = [
-    //     ...(this.line?.points || this.mouseStart.toArray().concat(0, 0))
-    //   ].slice(-4, -2)
-    //   const deltaX = Math.abs(this.mouseClipPos.x - x)
-    //   const deltaY = Math.abs(this.mouseClipPos.y - y)
-    //   const max = Math.max(deltaX, deltaY)
-    //   const mouseX = max === deltaX ? this.mouseClipPos.x : x
-    //   const mouseY = max === deltaY ? this.mouseClipPos.y : y
-
-    //   if (!this.line) {
-    //     this.line = new Line()
-    //     this.scene.add(this.line)
-    //     const points = [this.mouseStart.x, this.mouseStart.y, mouseX, mouseY]
-    //     this.line.addPoints(points)
-    //   } else {
-    //     this.line.replacePoint(mouseX, mouseY)
-    //   }
-    //   this.scene.render()
-    // }
     if (this.isPanning) {
       this.offset.x = this.curOffset.x + (e.x - this.x)
       this.offset.y = this.curOffset.y + (e.y - this.y)
-      console.log('this.offset', this.offset)
+      console.log('this.offset', e.x - this.x)
 
       this.paint()
     }
   }, 10)
   /** 鼠标松开 */
   pointerup = (e: PointerEvent) => {
-    // if (event.button === 0) {
-    //   this.isPanning = false
-    //   this.orbitControler.pointerup()
-    // }
     this.isPanning = false
     this.curOffset.x = this.offset.x
     this.curOffset.y = this.offset.y
@@ -266,13 +141,15 @@ export class Editor {
   paint() {
     // this.clear();
     this.scene.domElement.width = 1920
+    console.log('this.offset.x, this.offset.y', this.offset.x, this.offset.y)
+    this.scene.ctx.scale(2, 2)
     this.scene.ctx.translate(this.offset.x, this.offset.y)
     this.scene.ctx.scale(this.scale, this.scale)
     this.draw()
   }
   draw() {
     this.scene.ctx.fillStyle = 'red'
-    this.scene.ctx.fillRect(50, 50, 50, 50)
+    this.scene.ctx.fillRect(0, 0, 50, 50)
 
     this.scene.ctx.fillStyle = 'green'
     this.scene.ctx.fillRect(150, 150, 50, 50)

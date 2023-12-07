@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:35:54
+ * @LastEditTime: 2023-12-07 15:20:10
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -16,7 +16,7 @@ type SceneType = {
   domElement?: HTMLCanvasElement
   camera?: Camera
   autoClear?: boolean
-  offset?: number
+  position?: Vector2
 }
 
 export class Scene extends Group {
@@ -30,14 +30,15 @@ export class Scene extends Group {
   camera = new Camera()
   /** 是否自动清理画布 */
   autoClear = true
-  /** 裁剪偏移指 */
-  offset = 0
+  /** 场景位置 */
+  position = new Vector2(0, 0)
   // 类型
   readonly isScene = true
 
   constructor(attr: SceneType = {}) {
     super()
     this.setOption(attr)
+    this.camera.position.copy(this.position)
   }
 
   get domElement() {
@@ -61,18 +62,17 @@ export class Scene extends Group {
     this.domElement.height = height * ratio
     this.ctx = this.domElement.getContext('2d') as CanvasRenderingContext2D
     // this.ctx.save()
-    // this.ctx.scale(this.ratio, this.ratio)
+    // this.ctx.scale(ratio, ratio)
     // this.ctx.restore()
   }
 
   /* 设置属性 */
   setOption(attr: SceneType) {
     for (const [key, val] of Object.entries(attr)) {
-      if (key === 'offset') {
-        const offset = val as number
-        this.camera.position.set(offset, offset)
-      }
       this[key] = val
+      if (key === 'position') {
+        this.camera.position.copy(this.position)
+      }
     }
   }
 
@@ -93,7 +93,7 @@ export class Scene extends Group {
     ctx.fillRect(0, 0, width, height)
 
     // 裁剪坐标系：将canvas坐标系的原点移动到canvas画布中心
-
+    // ctx.translate(this.position.x, this.position.y)
     // 渲染子对象
     for (const obj of children) {
       ctx.save()

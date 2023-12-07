@@ -1,4 +1,5 @@
 // import { rotateInCanvas } from '../utils/canvas'
+import { ratio } from '../core/camera'
 import { Object2D } from './object2D'
 import { getClosestTimesVal, nearestPixelVal } from './objectUtils'
 export const HALF_PI = Math.PI / 2
@@ -72,7 +73,7 @@ export class Ruler extends Object2D {
     //   -config.width / window.devicePixelRatio / 2 - config.w,
     //   -config.height / window.devicePixelRatio / 2 - config.w
     // )
-    ctx.translate(-config.w, -config.w)
+    ctx.scale(ratio, ratio)
     // 绘制背景
     ctx.fillStyle = '#fff'
 

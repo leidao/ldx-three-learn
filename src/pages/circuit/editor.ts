@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:29:31
+ * @LastEditTime: 2023-12-07 15:51:06
  */
 
 import _ from 'lodash'
@@ -55,7 +55,7 @@ export class Editor {
     container.appendChild(canvas)
     this.domElement = canvas
     this.scene = new Scene()
-    this.scene.setOption({ domElement: canvas, offset: 20 })
+    this.scene.setOption({ domElement: canvas })
     const rulerConfig = {
       width: this.scene.domElement.width,
       height: this.scene.domElement.height,
@@ -68,12 +68,13 @@ export class Editor {
       h: 16, // 刻度线基础高度
       zoom: 1
     }
+    // this.scene.camera.position.set(20, 20)
     const image = new Image()
     image.src = vcc
     image.onload = () => {
       const pattern = new Img({
         image,
-        position: new Vector2(100, 100),
+        position: new Vector2(0, 0),
         size: new Vector2(70, 50)
         // offset: new Vector2(70, 50).multiplyScalar(-0.5)
       })
@@ -81,35 +82,35 @@ export class Editor {
       this.scene.render()
     }
 
-    this.ruler = new Ruler(rulerConfig)
-    this.scene.add(this.ruler)
+    // this.ruler = new Ruler(rulerConfig)
+    // this.scene.add(this.ruler)
     this.orbitControler = new OrbitControler(this.scene.camera, this.scene)
     this.orbitControler.maxZoom = 10
     this.orbitControler.minZoom = 0.1
     this.scene.render()
-    const { config } = this.ruler
-    let zoom = 1
+    // const { config } = this.ruler
+    // let zoom = 1
     this.orbitControler.addEventListener('change', (event) => {
       // console.log('event', event)
       const { target } = event
-      switch (target.type) {
-        case 'pointermove':
-          const position = this.scene.camera.position
-          config.x = position.x
-          config.y = position.y
-          break
-        case 'wheel':
-          const scale = Math.pow(0.95, this.orbitControler.zoomSpeed)
-          if (target.deltaY > 0) {
-            zoom *= scale
-          } else {
-            zoom /= scale
-          }
-          config.zoom = zoom
-          break
-        default:
-          break
-      }
+      // switch (target.type) {
+      //   case 'pointermove':
+      //     const position = this.scene.camera.position
+      //     config.x = -position.x
+      //     config.y = -position.y
+      //     break
+      //   case 'wheel':
+      //     const scale = Math.pow(0.95, this.orbitControler.zoomSpeed)
+      //     if (target.deltaY > 0) {
+      //       zoom *= scale
+      //     } else {
+      //       zoom /= scale
+      //     }
+      //     config.zoom = zoom
+      //     break
+      //   default:
+      //     break
+      // }
       // const { clientX, clientY } = target
       // const clip = this.scene.clientToClip(clientX, clientY)
       // const coord = this.scene.clientToCoord(clientX, clientY)
