@@ -1,9 +1,9 @@
 /*
- * @Description: 线段
+ * @Description: 矩形
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:23:50
+ * @LastEditTime: 2023-12-08 16:04:34
  */
 import { dpr } from '../core/camera'
 import { Matrix3 } from '../math/matrix3'
@@ -15,14 +15,22 @@ type LineType = Object2DType & {
   style?: BasicStyleType
   lineWidth?: number
   color?: string
+  width?: number
+  height?: number
+  startX?: number
+  startY?: number
 }
 
-export class Line extends Object2D {
+export class Rect extends Object2D {
+  index = Infinity
   style: BasicStyle = new BasicStyle()
-  /** 点位集合 */
-  points: number[] = []
+  /** 矩形宽高 */
+  width = 0
+  height = 0
+  startX = 0
+  startY = 0
   lineWidth = 2
-  color = '#000'
+  color = '#f00'
   // 类型
   readonly isLine = true
   constructor(attr: LineType = {}) {
@@ -59,31 +67,19 @@ export class Line extends Object2D {
     return this.pvmMatrix.multiply(new Matrix3().makeTranslation(x, y))
   }
 
-  /** 设置点位 */
-  setPoints(points: number[]) {
-    this.points = points
-  }
-  /** 追加点位 */
-  addPoints(points: number[]) {
-    this.points = this.points.concat(points)
-  }
-  /** 替换最后一个坐标 */
-  replacePoint(x: number, y: number) {
-    const { points } = this
-    points.splice(points.length - 2, 2, x, y)
-  }
   /* 绘图 */
   drawShape(ctx: CanvasRenderingContext2D) {
-    const { points, style, color, lineWidth } = this
-    if (points.length === 0) return
+    const { startX, startY, width, height, style, color, lineWidth } = this
     //样式
     style.apply(ctx)
-    ctx.strokeStyle = color
+    // ctx.strokeStyle = color
+    ctx.fillStyle = color
     ctx.lineWidth = lineWidth
     // 绘制图像
-    ctx.beginPath()
-    crtPath(ctx, points)
-    ctx.stroke()
+    // ctx.beginPath()
+    ctx.fillRect(startX, startY, width, height)
+
+    // ctx.stroke()
   }
 
   /* 绘制图像边界 */

@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:24:20
+ * @LastEditTime: 2023-12-08 16:02:15
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -16,7 +16,7 @@ type SceneType = {
   domElement?: HTMLCanvasElement
   camera?: Camera
   autoClear?: boolean
-  offset?: Vector2
+  isCenter?: boolean
 }
 
 export class Scene extends Group {
@@ -32,13 +32,16 @@ export class Scene extends Group {
   camera = new Camera()
   /** 是否自动清理画布 */
   autoClear = true
+  /** 画布是否居中 */
+  isCenter = true
   // 类型
   readonly isScene = true
 
   constructor(attr: SceneType = {}) {
     super()
     this.setOption(attr)
-    this.camera.position.copy(this.position)
+
+    // this.camera.position.copy(this.position)
   }
 
   get domElement() {
@@ -54,6 +57,9 @@ export class Scene extends Group {
     const width = container.clientWidth
     const height = container.clientHeight
     this.setViewPort(width, height)
+    if (this.isCenter) {
+      this.camera.position.set(width / 2, height / 2)
+    }
   }
   setViewPort(width: number, height: number) {
     this.domElement.style.width = width + 'px'
@@ -75,9 +81,6 @@ export class Scene extends Group {
   setOption(attr: SceneType) {
     for (const [key, val] of Object.entries(attr)) {
       this[key] = val
-      if (key === 'offset') {
-        this.camera.position.copy(val as Vector2)
-      }
     }
   }
 
@@ -97,14 +100,14 @@ export class Scene extends Group {
     ctx.fillStyle = '#f4f4f4'
     ctx.fillRect(0, 0, width, height)
 
-    camera.transformInvert(ctx)
-    this.transform(ctx)
+    //TODO 缩放不准,需解决
+    // this.transform(ctx)
 
     // 渲染子对象
     for (const obj of children) {
       ctx.save()
       // 视图投影矩阵
-      // obj.enableCamera && ctx.setTransform(1, 0, 0, 1, 0, 0)
+      obj.enableCamera && camera.transformInvert(ctx)
       // 绘图
       obj.draw(ctx)
       ctx.restore()
@@ -128,8 +131,8 @@ export class Scene extends Group {
 
   /* canvas坐标转裁剪坐标 */
   canvastoClip({ x, y }: Vector2) {
-    const { offset } = this
-    return new Vector2(x - offset, y - offset)
+    const { position } = this
+    return new Vector2(x - position.x, y - position.y)
   }
 
   /* client坐标转裁剪坐标 */
@@ -138,9 +141,16 @@ export class Scene extends Group {
   }
   /* client坐标转相机坐标 */
   clientToCoord(clientX: number, clientY: number) {
-    return this.canvastoClip(
-      this.clientToCanvas(clientX, clientY)
-    ).applyMatrix3(this.camera.pvMatrix.invert())
+    const {
+      camera: { zoom, position }
+    } = this
+
+    return this.canvastoClip(this.clientToCanvas(clientX, clientY))
+      .sub(position)
+      .divideScalar(zoom)
+    // return this.canvastoClip(
+    //   this.clientToCanvas(clientX, clientY)
+    // )
   }
 
   /* 基于某个坐标系，判断某个点是否在图形内 */
@@ -149,7 +159,7 @@ export class Scene extends Group {
     ctx.save()
     ctx.beginPath()
     // 画布缩放了，这里进行矩阵计算时要调整回来
-    ctx.scale(1 / ratio, 1 / ratio)
+    ctx.scale(1 / dpr, 1 / dpr)
     obj.crtPath(ctx, matrix)
     ctx.restore()
     return ctx.isPointInPath(mp.x, mp.y)

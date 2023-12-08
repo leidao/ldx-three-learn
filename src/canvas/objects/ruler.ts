@@ -56,7 +56,6 @@ export class Ruler extends Object2D {
     const { viewportWidth, viewportHeight } = scene.getViewPort()
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.save()
-
     ctx.scale(dpr, dpr)
     // 绘制背景
     ctx.fillStyle = '#fff'
@@ -106,13 +105,13 @@ export class Ruler extends Object2D {
     const endX = width
     let endXInScene = (endX - position.x) / zoom
     endXInScene = getClosestTimesVal(endXInScene, stepInScene)
+    // console.log('startXInScene', startXInScene)
 
     const y = config.w
     while (startXInScene <= endXInScene) {
       ctx.strokeStyle = '#c1c1c1'
       ctx.fillStyle = '#c1c1c1'
-      const x =
-        nearestPixelVal((startXInScene + position.x / zoom) * zoom) + config.w
+      const x = nearestPixelVal((startXInScene + position.x / zoom) * zoom)
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x, y - config.h)
@@ -153,8 +152,7 @@ export class Ruler extends Object2D {
     // ctx.textAlign = 'center'
     while (startYInScene <= endYInScene) {
       ctx.fillStyle = '#c1c1c1'
-      const y =
-        nearestPixelVal((startYInScene + position.y / zoom) * zoom) + config.w
+      const y = nearestPixelVal((startYInScene + position.y / zoom) * zoom)
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x - config.h, y)

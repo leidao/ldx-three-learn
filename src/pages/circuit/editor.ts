@@ -3,12 +3,12 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:25:01
+ * @LastEditTime: 2023-12-08 16:01:29
  */
 
 import _ from 'lodash'
 
-import { Img, Line, OrbitControler, Scene, Vector2 } from '@/canvas'
+import { Img, Line, OrbitControler, Rect, Scene, Vector2 } from '@/canvas'
 import { Ruler } from '@/canvas/objects/ruler'
 
 import vcc from './imgs/electricity/vcc.svg'
@@ -55,7 +55,7 @@ export class Editor {
     container.appendChild(canvas)
     this.domElement = canvas
     this.scene = new Scene()
-    this.scene.setOption({ domElement: canvas, offset: new Vector2(20, 20) })
+    this.scene.setOption({ domElement: canvas, offset: new Vector2(120, 120) })
     const rulerConfig = {
       x: 0, // 刻度尺x坐标位置,坐标原点在左上角
       y: 0, // 刻度尺y坐标位置,坐标原点在左上角
@@ -75,9 +75,12 @@ export class Editor {
       this.scene.add(pattern)
       this.scene.render()
     }
-
     this.ruler = new Ruler(rulerConfig)
     this.scene.add(this.ruler)
+    const rect = new Rect({ startX: 0, startY: 0, width: 100, height: 100 })
+
+    this.scene.add(rect)
+
     this.orbitControler = new OrbitControler(this.scene)
     this.orbitControler.maxZoom = 10
     this.orbitControler.minZoom = 0.1
@@ -131,6 +134,7 @@ export class Editor {
   pointermove = _.throttle((event: PointerEvent) => {
     const { clientX, clientY } = event
     this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
+    console.log(' this.mouseStart', this.mouseClipPos)
     this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
     // 绘制线段
     if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {

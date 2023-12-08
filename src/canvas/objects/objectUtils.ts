@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-19 16:05:57
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-04 21:10:28
+ * @LastEditTime: 2023-12-08 15:11:43
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -54,6 +54,8 @@ export const getClosestTimesVal = (value: number, segment: number) => {
   const n = Math.floor(value / segment)
   const left = segment * n
   const right = segment * (n + 1)
+  // console.log('====', value, segment, n, left, right)
+
   return value - left <= right - value ? left : right
 }
 /**

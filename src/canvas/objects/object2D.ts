@@ -3,8 +3,9 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-04 21:44:20
+ * @LastEditTime: 2023-12-08 15:04:45
  */
+import { dpr } from '../core/camera'
 import { EventDispatcher } from '../core/eventDispatcher'
 import { Scene } from '../core/scene'
 import { generateUUID } from '../math/mathUtils.js'

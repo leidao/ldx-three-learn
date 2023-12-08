@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-02 16:52:41
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-05 16:55:13
+ * @LastEditTime: 2023-12-08 14:49:54
  */
 export { ImgControler } from './controls/imgControls'
 export { OrbitControler } from './controls/orbitControls'
@@ -17,4 +17,5 @@ export { Img } from './objects/img'
 export { Line } from './objects/line'
 export { Object2D } from './objects/object2D'
 export * from './objects/objectUtils'
+export { Rect } from './objects/rect'
 export { Ruler } from './objects/ruler'
