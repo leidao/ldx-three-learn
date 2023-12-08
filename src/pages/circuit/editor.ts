@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 16:39:54
+ * @LastEditTime: 2023-12-08 17:03:43
  */
 
 import _ from 'lodash'
@@ -116,6 +116,7 @@ export class Editor {
         this.mouseStart.copy(this.scene.clientToCoord(clientX, clientY))
 
         if (this.line) {
+          //
           const [y, x] = [...this.line.points].reverse()
           const deltaX = Math.abs(this.mouseStart.x - x)
           const deltaY = Math.abs(this.mouseStart.y - y)
