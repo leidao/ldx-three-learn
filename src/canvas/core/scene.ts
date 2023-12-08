@@ -3,14 +3,14 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:16:32
+ * @LastEditTime: 2023-12-08 14:24:20
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
 import { Group } from '../objects/group'
 import { Img } from '../objects/img'
 import { Object2D } from '../objects/object2D'
-import { Camera } from './camera'
+import { Camera, dpr } from './camera'
 
 type SceneType = {
   domElement?: HTMLCanvasElement
@@ -32,17 +32,15 @@ export class Scene extends Group {
   camera = new Camera()
   /** 是否自动清理画布 */
   autoClear = true
-
   // 类型
   readonly isScene = true
 
   constructor(attr: SceneType = {}) {
     super()
     this.setOption(attr)
+    this.camera.position.copy(this.position)
   }
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
+
   get domElement() {
     return this._domElement
   }
@@ -60,8 +58,8 @@ export class Scene extends Group {
   setViewPort(width: number, height: number) {
     this.domElement.style.width = width + 'px'
     this.domElement.style.height = height + 'px'
-    this.domElement.width = width * this.ratio
-    this.domElement.height = height * this.ratio
+    this.domElement.width = width * dpr
+    this.domElement.height = height * dpr
     this.ctx = this.domElement.getContext('2d') as CanvasRenderingContext2D
   }
   getViewPort() {
@@ -147,7 +145,7 @@ export class Scene extends Group {
 
   /* 基于某个坐标系，判断某个点是否在图形内 */
   isPointInObj(obj: Object2D, mp: Vector2, matrix: Matrix3 = new Matrix3()) {
-    const { ctx, ratio } = this
+    const { ctx } = this
     ctx.save()
     ctx.beginPath()
     // 画布缩放了，这里进行矩阵计算时要调整回来

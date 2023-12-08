@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:16:54
+ * @LastEditTime: 2023-12-08 14:25:01
  */
 
 import _ from 'lodash'
@@ -44,9 +44,6 @@ export class Editor {
   selectImg!: null | HTMLImageElement
   /** 事件 */
 
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
   constructor(option: Option) {
     this.option = option
     this.init()
@@ -65,14 +62,15 @@ export class Editor {
       w: 20, // 标尺的高度
       h: 16 // 刻度线基础高度
     }
+    // this.scene.camera.position.set(20, 20)
     const image = new Image()
     image.src = vcc
     image.onload = () => {
       const pattern = new Img({
         image,
         position: new Vector2(100, 100),
-        size: new Vector2(70, 50),
-        offset: new Vector2(70, 50).multiplyScalar(-0.5)
+        size: new Vector2(70, 50)
+        // offset: new Vector2(70, 50).multiplyScalar(-0.5)
       })
       this.scene.add(pattern)
       this.scene.render()
@@ -108,6 +106,7 @@ export class Editor {
   /** 鼠标按下 */
   pointerdown = (event: PointerEvent) => {
     const { button, clientX, clientY } = event
+
     if (button === 0) {
       this.isPanning = true
       this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
@@ -131,7 +130,7 @@ export class Editor {
   /** 鼠标移动 */
   pointermove = _.throttle((event: PointerEvent) => {
     const { clientX, clientY } = event
-    // this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
+    this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
     this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
     // 绘制线段
     if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {

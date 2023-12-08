@@ -3,10 +3,10 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:08:14
+ * @LastEditTime: 2023-12-08 14:23:50
  */
+import { dpr } from '../core/camera'
 import { Matrix3 } from '../math/matrix3'
-import { Vector2 } from '../math/vector2'
 import { BasicStyle, BasicStyleType } from '../style/basicStyle'
 import { Object2D, Object2DType } from './object2D'
 import { crtPath, crtPathByMatrix } from './objectUtils'
@@ -58,9 +58,7 @@ export class Line extends Object2D {
     } = this
     return this.pvmMatrix.multiply(new Matrix3().makeTranslation(x, y))
   }
-  get ratio() {
-    return window.devicePixelRatio || 1
-  }
+
   /** 设置点位 */
   setPoints(points: number[]) {
     this.points = points
@@ -81,7 +79,7 @@ export class Line extends Object2D {
     //样式
     style.apply(ctx)
     ctx.strokeStyle = color
-    ctx.lineWidth = lineWidth / this.ratio
+    ctx.lineWidth = lineWidth / dpr
     // 绘制图像
     ctx.beginPath()
     crtPath(ctx, points)
