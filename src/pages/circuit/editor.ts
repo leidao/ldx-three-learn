@@ -146,6 +146,7 @@ export class Editor {
       const mouseY = max === deltaY ? this.mouseClipPos.y : y
 
       if (!this.line) {
+        //
         this.line = new Line()
         this.scene.add(this.line)
         const points = [this.mouseStart.x, this.mouseStart.y, mouseX, mouseY]
