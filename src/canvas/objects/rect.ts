@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 16:04:34
+ * @LastEditTime: 2023-12-08 16:07:29
  */
 import { dpr } from '../core/camera'
 import { Matrix3 } from '../math/matrix3'
@@ -22,7 +22,6 @@ type LineType = Object2DType & {
 }
 
 export class Rect extends Object2D {
-  index = Infinity
   style: BasicStyle = new BasicStyle()
   /** 矩形宽高 */
   width = 0

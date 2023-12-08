@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-10 10:14:58
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 14:55:48
+ * @LastEditTime: 2023-11-13 22:19:04
  */
 import * as THREE from 'three';
 export class NPC {
@@ -97,6 +97,8 @@ export class NPC {
         player.quaternion.copy(quaternion);
     }
     newPath(pt) {
+        if (!pt)
+            return;
         const player = this.object;
         if (!this.pathfinder) {
             // 寻路算法未准备好，先等待
@@ -112,6 +114,9 @@ export class NPC {
             this.action = 'walking';
             this.setTargetDirection(this.calculatedPath[0].clone());
             if (this.showPath) {
+                if (this.pathLines) {
+                    this.app.viewer.scene.remove(this.pathLines);
+                }
                 const material = new THREE.LineBasicMaterial({
                     color: this.pathColor,
                     linewidth: 2

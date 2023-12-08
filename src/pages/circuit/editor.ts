@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 16:01:29
+ * @LastEditTime: 2023-12-08 16:39:54
  */
 
 import _ from 'lodash'
@@ -54,8 +54,7 @@ export class Editor {
     const canvas = document.createElement('canvas')
     container.appendChild(canvas)
     this.domElement = canvas
-    this.scene = new Scene()
-    this.scene.setOption({ domElement: canvas, offset: new Vector2(120, 120) })
+    this.scene = new Scene({ domElement: canvas })
     const rulerConfig = {
       x: 0, // 刻度尺x坐标位置,坐标原点在左上角
       y: 0, // 刻度尺y坐标位置,坐标原点在左上角
@@ -115,7 +114,6 @@ export class Editor {
       this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
       if (this.toolOperation === 'line') {
         this.mouseStart.copy(this.scene.clientToCoord(clientX, clientY))
-        console.log(' this.mouseStart', this.mouseStart)
 
         if (this.line) {
           const [y, x] = [...this.line.points].reverse()
@@ -134,7 +132,7 @@ export class Editor {
   pointermove = _.throttle((event: PointerEvent) => {
     const { clientX, clientY } = event
     this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
-    console.log(' this.mouseStart', this.mouseClipPos)
+    // console.log(' this.mouseStart', clientX, clientY)
     this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
     // 绘制线段
     if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {
@@ -204,6 +202,26 @@ export class Editor {
       offset: new Vector2(70, 50).multiplyScalar(-0.5)
     })
     this.scene.add(pattern)
+    this.scene.render()
+  }
+  /**  放大 */
+  zoomIn = () => {
+    const { orbitControler, scene } = this
+    const scale = Math.pow(0.95, orbitControler.zoomSpeed)
+    if (scene.camera.zoom > orbitControler.maxZoom) return
+    scene.camera.zoom /= scale
+    this.orbitControler.setZoom()
+
+    this.scene.render()
+  }
+
+  /** 缩小 */
+  zoomOut = () => {
+    const { orbitControler, scene } = this
+    const scale = Math.pow(0.95, orbitControler.zoomSpeed)
+    if (scene.camera.zoom < orbitControler.minZoom) return
+    scene.camera.zoom *= scale
+    this.orbitControler.setZoom()
     this.scene.render()
   }
 

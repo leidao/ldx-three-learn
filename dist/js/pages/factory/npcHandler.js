@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-06 15:33:12
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 14:57:38
+ * @LastEditTime: 2023-11-13 22:20:50
  */
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
@@ -47,9 +47,9 @@ export class NPCHandler {
         const gltfs = [gltf];
         this.waypoints = this.game.waypoints;
         this.npcs = [];
-        for (let i = 0; i < 3; i++) {
-            gltfs.push(this.cloneGLTF(gltf));
-        }
+        // for (let i = 0; i < 3; i++) {
+        //   gltfs.push(this.cloneGLTF(gltf))
+        // }
         gltfs.forEach((gltf) => {
             const object = gltf.scene;
             object.traverse((child) => {
@@ -61,15 +61,15 @@ export class NPCHandler {
                 object,
                 speed: 0.8,
                 animations: gltf.animations,
-                waypoints: this.waypoints,
+                // waypoints: this.waypoints,
                 app: this.game,
-                showPath: false,
+                showPath: true,
                 zone: 'factory',
                 name: 'swat-guy'
             };
             const npc = new NPC(options);
             npc.object.position.copy(this.randonWaypoint);
-            npc.newPath(this.randonWaypoint);
+            // npc.newPath(this.randonWaypoint)
             this.npcs.push(npc);
         });
     }
@@ -120,6 +120,7 @@ export class NPCHandler {
             const instersects = this.viewer.raycaster.intersectObject(this.game.navMesh);
             if (instersects.length > 0) {
                 const pt = instersects[0].point;
+                console.log('pt', pt);
                 this.npcs[0].newPath(pt);
             }
         };

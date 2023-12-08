@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:27:07
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 15:52:15
+ * @LastEditTime: 2023-12-08 16:43:47
  */
 
 import { Camera } from '../core/camera'
@@ -73,11 +73,8 @@ export class OrbitControler extends EventDispatcher {
   setOption(option: Option) {
     Object.assign(this, option)
   }
-  setZoom(mousePosition: Vector2) {
+  setZoom(mousePosition?: Vector2) {
     const { camera, stage } = this
-    const {
-      position: { x: offsetX, y: offsetY }
-    } = this.scene
     let _mousePosition = new Vector2()
     if (mousePosition) {
       _mousePosition = this.scene.clientToCanvas(
@@ -85,8 +82,8 @@ export class OrbitControler extends EventDispatcher {
         mousePosition.y
       )
     } else {
-      const { width, height } = this.scene.getViewPort()
-      _mousePosition.set(width / 2, height / 2)
+      const { viewportWidth, viewportHeight } = this.scene.getViewPort()
+      _mousePosition.set(viewportWidth / 2, viewportHeight / 2)
     }
     const position = _mousePosition.sub(
       _mousePosition
@@ -98,7 +95,6 @@ export class OrbitControler extends EventDispatcher {
     camera.position.copy(position.clone())
     stage.cameraPosition.copy(position.clone())
     stage.cameraZoom = camera.zoom
-    console.log('position', position)
   }
 
   /* 缩放 */

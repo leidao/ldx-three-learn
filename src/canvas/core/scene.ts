@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 16:02:15
+ * @LastEditTime: 2023-12-08 16:08:52
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -159,7 +159,7 @@ export class Scene extends Group {
     ctx.save()
     ctx.beginPath()
     // 画布缩放了，这里进行矩阵计算时要调整回来
-    ctx.scale(1 / dpr, 1 / dpr)
+    // ctx.scale(1 / dpr, 1 / dpr)
     obj.crtPath(ctx, matrix)
     ctx.restore()
     return ctx.isPointInPath(mp.x, mp.y)

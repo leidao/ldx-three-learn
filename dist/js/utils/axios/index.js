@@ -4,7 +4,7 @@ import { history } from '@/App';
 import { getToken } from '..';
 //创建实例
 const request = axios.create({
-    baseURL: '/api/v1',
+    baseURL: '/components',
     timeout: 1000 * 60 // 60s后请求超时
 });
 request.interceptors.request.use(async function (config) {

@@ -3,9 +3,9 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:36:37
+ * @LastEditTime: 2023-12-08 16:25:31
  */
-import { Dropdown, Space } from 'antd'
+import { Dropdown, InputNumber, Space } from 'antd'
 import { useEffect, useState } from 'react'
 
 import { Editor } from './editor'
@@ -21,12 +21,32 @@ type Props = {
   editor: Editor | undefined
 }
 const Tool: React.FC<Props> = ({ className, editor }) => {
-  const [selected, setselected] = useState('panning')
+  const [selected, setSelected] = useState('panning')
+  const [open, setOpen] = useState(false)
   if (!editor) return <div></div>
   // useEffect(() => {}, [])
+  /** 改变画布缩放大小 */
+  const zoomChange = () => {}
   const items: any = [
-    { label: '菜单项一', key: 'item-1' },
-    { label: '菜单项二', key: 'item-2' }
+    {
+      label: (
+        <InputNumber
+          size="small"
+          defaultValue={100}
+          min={0}
+          max={100}
+          formatter={(value) => `${value}%`}
+          onChange={zoomChange}
+        />
+      ),
+      key: '1'
+    },
+    {
+      label: '放大',
+      key: '2',
+      onClick: editor.zoomIn
+    },
+    { label: '缩小', key: '3', onClick: editor.zoomOut }
   ]
   const styleFn = (value: string) => {
     return {
@@ -41,7 +61,7 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
           style={styleFn('selected')}
           onClick={() => {
-            setselected('selected')
+            setSelected('selected')
             editor.toolOperation = 'selected'
           }}
         >
@@ -51,7 +71,7 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
           style={styleFn('text')}
           onClick={() => {
-            setselected('text')
+            setSelected('text')
             editor.toolOperation = 'text'
           }}
         >
@@ -61,7 +81,7 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
           style={styleFn('panning')}
           onClick={() => {
-            setselected('panning')
+            setSelected('panning')
             editor.toolOperation = 'panning'
           }}
         >
@@ -71,7 +91,7 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
           style={styleFn('line')}
           onClick={() => {
-            setselected('line')
+            setSelected('line')
             editor.toolOperation = 'line'
           }}
         >
@@ -79,7 +99,14 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
         </div>
       </div>
       <div className="w-100px">
-        <Dropdown menu={{ items }} trigger={['click']}>
+        <Dropdown
+          menu={{ items }}
+          trigger={['click']}
+          open={open}
+          onOpenChange={(flag) => {
+            setOpen(flag)
+          }}
+        >
           <a onClick={(e) => e.preventDefault()}>
             <Space>
               <div>100%</div>

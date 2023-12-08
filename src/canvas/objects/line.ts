@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:21:19
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 14:23:50
+ * @LastEditTime: 2023-12-08 16:08:23
  */
 import { dpr } from '../core/camera'
 import { Matrix3 } from '../math/matrix3'
@@ -79,7 +79,7 @@ export class Line extends Object2D {
     //样式
     style.apply(ctx)
     ctx.strokeStyle = color
-    ctx.lineWidth = lineWidth
+    ctx.lineWidth = lineWidth / dpr
     // 绘制图像
     ctx.beginPath()
     crtPath(ctx, points)
