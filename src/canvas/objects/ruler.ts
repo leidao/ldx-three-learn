@@ -1,4 +1,5 @@
 // import { rotateInCanvas } from '../utils/canvas'
+import { dpr } from '../core/camera'
 import { Object2D } from './object2D'
 import { getClosestTimesVal, nearestPixelVal } from './objectUtils'
 export const HALF_PI = Math.PI / 2
@@ -26,25 +27,10 @@ const getStepByZoom = (zoom: number) => {
   return steps[0]
 }
 export type RulerConfig = {
-  /** 画布的宽度 */
-  width: number
-  /** 画布的高度 */
-  height: number
-  /** canvas的宽度 */
-  viewportWidth: number
-  /** canvas的高度 */
-  viewportHeight: number
-  /** 刻度线的间隔 */
-  offset: number
-  /** 刻度尺x坐标位置,坐标原点在左上角 */
-  x: number
-  /** 刻度尺y坐标位置,坐标原点在左下角 */
-  y: number
   /** 标尺的高度 */
   w: number
   /**  刻度线基础高度 */
   h: number
-  zoom: number
 }
 export class Ruler extends Object2D {
   /** 渲染顺序 */
@@ -65,19 +51,18 @@ export class Ruler extends Object2D {
     // const setting = this.editor.setting
     // const viewport = this.editor.viewportManager.getViewport()
     const { config } = this
-    const { viewportWidth, viewportHeight, w } = config
-
+    const scene = this.getScene()
+    if (!scene) return
+    const { viewportWidth, viewportHeight } = scene.getViewPort()
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.save()
-    // ctx.translate(
-    //   -config.width / window.devicePixelRatio / 2 - config.w,
-    //   -config.height / window.devicePixelRatio / 2 - config.w
-    // )
-    ctx.translate(-config.w, -config.w)
+
+    ctx.scale(dpr, dpr)
     // 绘制背景
     ctx.fillStyle = '#fff'
 
-    ctx.fillRect(0, 0, viewportWidth, w)
-    ctx.fillRect(0, 0, w, viewportHeight)
+    ctx.fillRect(0, 0, viewportWidth, config.w)
+    ctx.fillRect(0, 0, config.w, viewportHeight)
 
     this.drawXRuler(ctx)
     this.drawYRuler(ctx)
@@ -104,17 +89,22 @@ export class Ruler extends Object2D {
     ctx.restore()
   }
   private drawXRuler(ctx: CanvasRenderingContext2D) {
+    const scene = this.getScene()
+    if (!scene) return
+    const { width } = scene.getViewPort()
+    const {
+      camera: { position, zoom }
+    } = scene
     const { config } = this
     // 绘制刻度线和刻度值
     // 计算 x 轴起点和终点范围
-    const zoom = config.zoom
     const stepInScene = getStepByZoom(zoom)
 
-    let startXInScene = config.x / zoom
+    let startXInScene = -position.x / zoom
     startXInScene = getClosestTimesVal(startXInScene, stepInScene)
 
-    const endX = config.width
-    let endXInScene = (config.x + endX) / zoom
+    const endX = width
+    let endXInScene = (endX - position.x) / zoom
     endXInScene = getClosestTimesVal(endXInScene, stepInScene)
 
     const y = config.w
@@ -122,7 +112,7 @@ export class Ruler extends Object2D {
       ctx.strokeStyle = '#c1c1c1'
       ctx.fillStyle = '#c1c1c1'
       const x =
-        nearestPixelVal((startXInScene - config.x / zoom) * zoom) + config.w
+        nearestPixelVal((startXInScene + position.x / zoom) * zoom) + config.w
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x, y - config.h)
@@ -142,24 +132,29 @@ export class Ruler extends Object2D {
     }
   }
   private drawYRuler(ctx: CanvasRenderingContext2D) {
+    const scene = this.getScene()
+    if (!scene) return
+    const { height } = scene.getViewPort()
+    const {
+      camera: { position, zoom }
+    } = scene
     const { config } = this
     // 绘制刻度线和刻度值
-    const zoom = config.zoom
     const stepInScene = getStepByZoom(zoom)
 
     // const startY = config.w
-    let startYInScene = config.y / zoom
+    let startYInScene = -position.y / zoom
     startYInScene = getClosestTimesVal(startYInScene, stepInScene)
 
-    const endY = config.height
-    let endYInScene = (config.y + endY) / zoom
+    const endY = height
+    let endYInScene = (endY - position.y) / zoom
     endYInScene = getClosestTimesVal(endYInScene, stepInScene)
     const x = config.w
     // ctx.textAlign = 'center'
     while (startYInScene <= endYInScene) {
       ctx.fillStyle = '#c1c1c1'
       const y =
-        nearestPixelVal((startYInScene - config.y / zoom) * zoom) + config.w
+        nearestPixelVal((startYInScene + position.y / zoom) * zoom) + config.w
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x - config.h, y)

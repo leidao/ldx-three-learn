@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 12:24:34
+ * @LastEditTime: 2023-12-08 14:16:54
  */
 
 import _ from 'lodash'
@@ -58,18 +58,12 @@ export class Editor {
     container.appendChild(canvas)
     this.domElement = canvas
     this.scene = new Scene()
-    this.scene.setOption({ domElement: canvas, offset: 20 })
+    this.scene.setOption({ domElement: canvas, offset: new Vector2(20, 20) })
     const rulerConfig = {
-      width: this.scene.domElement.width,
-      height: this.scene.domElement.height,
-      viewportWidth: this.scene.domElement.clientWidth,
-      viewportHeight: this.scene.domElement.clientHeight,
-      offset: 30, // 刻度线的间隔
       x: 0, // 刻度尺x坐标位置,坐标原点在左上角
       y: 0, // 刻度尺y坐标位置,坐标原点在左上角
       w: 20, // 标尺的高度
-      h: 16, // 刻度线基础高度
-      zoom: 1
+      h: 16 // 刻度线基础高度
     }
     const image = new Image()
     image.src = vcc
@@ -86,44 +80,12 @@ export class Editor {
 
     this.ruler = new Ruler(rulerConfig)
     this.scene.add(this.ruler)
-    this.orbitControler = new OrbitControler(this.scene.camera, this.scene)
+    this.orbitControler = new OrbitControler(this.scene)
     this.orbitControler.maxZoom = 10
     this.orbitControler.minZoom = 0.1
     this.scene.render()
-    const { config } = this.ruler
-    let zoom = 1
-    this.orbitControler.addEventListener('change', (event) => {
-      // console.log('event', event)
-      const { target } = event
-      switch (target.type) {
-        case 'pointermove':
-          const position = this.scene.camera.position
-          config.x = position.x
-          config.y = position.y
-          break
-        case 'wheel':
-          const scale = Math.pow(0.95, this.orbitControler.zoomSpeed)
-          if (target.deltaY > 0) {
-            zoom *= scale
-          } else {
-            zoom /= scale
-          }
-          config.zoom = zoom
-          break
-        default:
-          break
-      }
-      // const { clientX, clientY } = target
-      // const clip = this.scene.clientToClip(clientX, clientY)
-      // const coord = this.scene.clientToCoord(clientX, clientY)
-      // const move = coord.sub(clip)
-
-      // console.log('scene', clip, coord, move)
-      // this.scene.ctx.save()
-      // this.scene.ctx.translate(move.x, move.y)
+    this.orbitControler.addEventListener('change', () => {
       this.scene.render()
-
-      // this.scene.ctx.restore()
     })
 
     this.listen()
@@ -150,7 +112,7 @@ export class Editor {
       this.isPanning = true
       this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
       if (this.toolOperation === 'line') {
-        this.mouseStart.copy(this.scene.clientToClip(clientX, clientY))
+        this.mouseStart.copy(this.scene.clientToCoord(clientX, clientY))
         console.log(' this.mouseStart', this.mouseStart)
 
         if (this.line) {
@@ -169,7 +131,7 @@ export class Editor {
   /** 鼠标移动 */
   pointermove = _.throttle((event: PointerEvent) => {
     const { clientX, clientY } = event
-    this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
+    // this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
     this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
     // 绘制线段
     if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {
@@ -208,12 +170,7 @@ export class Editor {
     const container = this.option.container
     const width = container.clientWidth
     const height = container.clientHeight
-    this.scene.updateViewPort(width, height)
-    this.ruler.config.width = this.scene.domElement.width
-    this.ruler.config.height = this.scene.domElement.height
-    this.ruler.config.viewportWidth = this.scene.domElement.clientWidth
-    this.ruler.config.viewportHeight = this.scene.domElement.clientHeight
-    // this.ruler.config.x = -this.scene.domElement.clientWidth / 2 - 20
+    this.scene.setViewPort(width, height)
     this.scene.render()
   }, 20)
   /** 拖拽进入目标元素 */

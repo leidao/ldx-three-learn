@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:19:56
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:07:17
+ * @LastEditTime: 2023-12-08 14:16:32
  */
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
@@ -16,10 +16,12 @@ type SceneType = {
   domElement?: HTMLCanvasElement
   camera?: Camera
   autoClear?: boolean
-  offset?: number
+  offset?: Vector2
 }
 
 export class Scene extends Group {
+  width!: number
+  height!: number
   /** canvas画布 */
   _domElement = document.createElement('canvas')
   /** canvas 上下文对象 */
@@ -30,8 +32,7 @@ export class Scene extends Group {
   camera = new Camera()
   /** 是否自动清理画布 */
   autoClear = true
-  /** 裁剪偏移指 */
-  offset = 0
+
   // 类型
   readonly isScene = true
 
@@ -54,21 +55,31 @@ export class Scene extends Group {
     if (!container) return
     const width = container.clientWidth
     const height = container.clientHeight
-    this.updateViewPort(width, height)
+    this.setViewPort(width, height)
   }
-  updateViewPort(width: number, height: number) {
+  setViewPort(width: number, height: number) {
     this.domElement.style.width = width + 'px'
     this.domElement.style.height = height + 'px'
     this.domElement.width = width * this.ratio
     this.domElement.height = height * this.ratio
     this.ctx = this.domElement.getContext('2d') as CanvasRenderingContext2D
-    this.ctx.scale(this.ratio, this.ratio)
+  }
+  getViewPort() {
+    return {
+      width: this.domElement.width,
+      height: this.domElement.height,
+      viewportWidth: this.domElement.clientWidth,
+      viewportHeight: this.domElement.clientHeight
+    }
   }
 
   /* 设置属性 */
   setOption(attr: SceneType) {
     for (const [key, val] of Object.entries(attr)) {
       this[key] = val
+      if (key === 'offset') {
+        this.camera.position.copy(val as Vector2)
+      }
     }
   }
 
@@ -79,23 +90,23 @@ export class Scene extends Group {
       ctx,
       camera,
       children,
-      autoClear,
-      offset
+      autoClear
     } = this
     ctx.save()
     // 清理画布
-
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
     autoClear && ctx.clearRect(0, 0, width, height)
     ctx.fillStyle = '#f4f4f4'
     ctx.fillRect(0, 0, width, height)
 
-    // 裁剪坐标系：将canvas坐标系的原点移动到canvas画布中心
-    ctx.translate(offset, offset)
+    camera.transformInvert(ctx)
+    this.transform(ctx)
+
     // 渲染子对象
     for (const obj of children) {
       ctx.save()
       // 视图投影矩阵
-      obj.enableCamera && camera.transformInvert(ctx)
+      // obj.enableCamera && ctx.setTransform(1, 0, 0, 1, 0, 0)
       // 绘图
       obj.draw(ctx)
       ctx.restore()
@@ -109,6 +120,12 @@ export class Scene extends Group {
     const { domElement } = this
     const { left, top } = domElement.getBoundingClientRect()
     return new Vector2(clientX - left, clientY - top)
+  }
+  /* canvas坐标转client坐标*/
+  canvasToClient(x: number, y: number) {
+    const { domElement } = this
+    const { left, top } = domElement.getBoundingClientRect()
+    return new Vector2(x + left, y + top)
   }
 
   /* canvas坐标转裁剪坐标 */

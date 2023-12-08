@@ -3,12 +3,13 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:28:05
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 11:06:20
+ * @LastEditTime: 2023-12-08 14:20:02
  */
 
 import { Matrix3 } from '../math/matrix3'
 import { Vector2 } from '../math/vector2'
 
+export const dpr = window.devicePixelRatio || 1
 export class Camera {
   position: Vector2
   zoom: number
@@ -30,8 +31,10 @@ export class Camera {
       position: { x, y },
       zoom
     } = this
-    const scale = 1 / zoom
-    ctx.translate(-x, -y)
-    ctx.scale(scale, scale)
+    // const scale = 1 / zoom
+    // ctx.translate(-x, -y)
+    // ctx.scale(scale, scale)
+    ctx.translate(x * dpr, y * dpr)
+    ctx.scale(zoom * dpr, zoom * dpr)
   }
 }

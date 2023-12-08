@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-15 12:27:07
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 12:25:28
+ * @LastEditTime: 2023-12-08 14:19:56
  */
 
 import { Camera } from '../core/camera'
@@ -61,15 +61,10 @@ export class OrbitControler extends EventDispatcher {
     cameraPosition: new Vector2(),
     panStart: new Vector2()
   }
-  event!: {
-    wheel: (event: WheelEvent) => void
-    pointerdown: (event: PointerEvent) => void
-    pointermove: (event: PointerEvent) => void
-    pointerup: (event: PointerEvent) => void
-  }
-  constructor(camera: Camera, scene: Scene, option: Option = {}) {
+
+  constructor(scene: Scene, option: Option = {}) {
     super()
-    this.camera = camera
+    this.camera = scene.camera
     this.scene = scene
     this.setOption(option)
   }
@@ -78,36 +73,52 @@ export class OrbitControler extends EventDispatcher {
   setOption(option: Option) {
     Object.assign(this, option)
   }
+  setZoom(mousePosition: Vector2) {
+    const { camera, stage } = this
+    let _mousePosition = new Vector2()
+    if (mousePosition) {
+      _mousePosition = this.scene.clientToCanvas(
+        mousePosition.x,
+        mousePosition.y
+      )
+    } else {
+      const { width, height } = this.scene.getViewPort()
+      _mousePosition.set(width / 2, height / 2)
+    }
+    const position = _mousePosition
+      .clone()
+      .sub(
+        _mousePosition
+          .clone()
+          .sub(camera.position)
+          .multiplyScalar(camera.zoom)
+          .divideScalar(stage.cameraZoom)
+      )
+    camera.position.copy(position)
+    stage.cameraPosition.copy(position)
+    stage.cameraZoom = camera.zoom
+  }
 
   /* 缩放 */
   wheel = (event: WheelEvent) => {
     const { deltaY, clientX, clientY } = event
-    const { enableZoom, camera, zoomSpeed, stage } = this
+    const { enableZoom, camera, zoomSpeed } = this
     if (!enableZoom) {
       return
     }
-    stage.cameraZoom = camera.zoom
     const scale = Math.pow(0.95, zoomSpeed)
 
     if (deltaY > 0) {
-      if (camera.zoom > this.maxZoom) return
-
-      camera.zoom /= scale
-    } else {
       if (camera.zoom < this.minZoom) return
 
       camera.zoom *= scale
-    }
-    // const diffZoom = camera.zoom - stage.cameraZoom
-    // const x = (clientX - )
-    // console.log('event', event)
-    // const clip = this.scene.clientToClip(clientX, clientY)
-    // const coord = this.scene.clientToCoord(clientX, clientY)
-    // const move = coord.sub(clip)
-    //
-    // console.log('scene', clip.x, coord.x, -coord.x - clip.x)
+    } else {
+      if (camera.zoom > this.maxZoom) return
 
-    // camera.position.set(-coord.x + clip.x, -coord.y + clip.y)
+      camera.zoom /= scale
+    }
+
+    this.setZoom(new Vector2(clientX, clientY))
 
     const _changeEvent = {
       type: 'change',
@@ -134,7 +145,12 @@ export class OrbitControler extends EventDispatcher {
 
   /* 鼠标抬起 */
   pointerup = () => {
+    const {
+      camera: { position },
+      stage: { cameraPosition }
+    } = this
     this.panning = false
+    cameraPosition.copy(position.clone())
   }
 
   /* 位移 */
@@ -153,7 +169,7 @@ export class OrbitControler extends EventDispatcher {
       return
     }
 
-    position.copy(cameraPosition.clone().add(new Vector2(x - cx, y - cy)))
+    position.copy(cameraPosition.clone().add(new Vector2(cx - x, cy - y)))
 
     const _changeEvent = {
       type: 'change',
