@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-09 09:38:54
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-09 15:22:35
+ * @LastEditTime: 2023-12-09 18:57:23
  */
 /*
  * @Description:
@@ -32,17 +32,27 @@ class ToolManager extends EventDispatcher {
   enableSwitchTool = true
   constructor(private editor: Editor) {
     super()
-    this.registerToolAndHotKey(new ToolDragCanvas(editor))
-    this.registerToolAndHotKey(new ToolDrawLine(editor))
+    this.register(new ToolDragCanvas(editor))
+    this.register(new ToolDrawLine(editor))
   }
-  registerToolAndHotKey(tool: ToolBase) {
+  /** 注册 */
+  register(tool: ToolBase) {
+    this.registerTool(tool)
+    this.registerHotKey(tool)
+  }
+  registerTool(tool: ToolBase) {
+    if (!tool.type) {
+      throw new Error(`tool ${tool.type} 属性没有定义`)
+    }
     if (this.toolMap.has(tool.type)) {
-      console.warn(`工具 "${tool.type}" 已经被注册过`)
+      console.warn(`tool ${tool.type} 已经被注册过`)
     }
     this.toolMap.set(tool.type, tool)
-
+  }
+  registerHotKey(tool: ToolBase) {
+    if (!tool.hotkey) return
     if (this.hotkeyMap.has(tool.hotkey)) {
-      // console.warn(`快捷键 "${tool.type}" 已经被注册过`)
+      console.warn(`tool快捷键 ${tool.type} 已经被注册过`)
     }
     this.hotkeyMap.set(tool.hotkey, tool.type)
   }
