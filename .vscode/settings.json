@@ -71,4 +71,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "git.autofetch": true,
     "tabnine.experimentalAutoImports": true,
+    "[typescript]": {
+      "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    },
 }

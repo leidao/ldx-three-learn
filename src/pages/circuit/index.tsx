@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-07 13:36:38
+ * @LastEditTime: 2023-12-09 15:04:56
  */
 import { useEffect, useRef, useState } from 'react'
 
@@ -54,6 +54,7 @@ const Home = () => {
     container.removeEventListener('drop', editor.drop)
   }
   useEffect(() => {
+    if (!container.current) return
     const editor = new Editor({ container: container.current })
     setEditor(editor)
     // axios.get('/list').then((res) => {

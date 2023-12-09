@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-01 13:47:13
+ * @LastEditTime: 2023-12-08 17:12:15
  */
 import React from 'react'
 
@@ -86,6 +86,15 @@ export default [
     component: React.lazy(() => import('@/pages/circuit')),
     icon: '',
     title: '电路图编辑器',
+    hideInMenu: true,
+    auth: []
+  },
+  {
+    path: '/substation',
+    key: 'substation',
+    component: React.lazy(() => import('@/pages/substation')),
+    icon: '',
+    title: '变电站',
     hideInMenu: true,
     auth: []
   }

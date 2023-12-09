@@ -354,7 +354,7 @@ export class Vector2 {
     }
   }
   isEmpty() {
-    return this.x !== Infinity && this.y !== Infinity
+    return this.x === Infinity && this.y === Infinity
   }
 
   applyMatrix3(m: Matrix3) {

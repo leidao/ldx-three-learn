@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 16:25:31
+ * @LastEditTime: 2023-12-09 15:15:30
  */
 import { Dropdown, InputNumber, Space } from 'antd'
 import { useEffect, useState } from 'react'
@@ -54,46 +54,38 @@ const Tool: React.FC<Props> = ({ className, editor }) => {
       color: selected === value ? '#fff' : '#000'
     }
   }
+  const setActive = (toolName: string) => {
+    setSelected(toolName)
+    editor.toolManager.setActiveTool(toolName)
+  }
   return (
     <div className={`${className} flex justify-center items-center`}>
       <div className="flex-1 flex items-center ">
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
           style={styleFn('selected')}
-          onClick={() => {
-            setSelected('selected')
-            editor.toolOperation = 'selected'
-          }}
+          onClick={() => setActive('selected')}
         >
           <SelectOutlined></SelectOutlined>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={styleFn('text')}
-          onClick={() => {
-            setSelected('text')
-            editor.toolOperation = 'text'
-          }}
+          style={styleFn('drawText')}
+          onClick={() => setActive('drawText')}
         >
           <TextFilled></TextFilled>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={styleFn('panning')}
-          onClick={() => {
-            setSelected('panning')
-            editor.toolOperation = 'panning'
-          }}
+          style={styleFn('dragCanvas')}
+          onClick={() => setActive('dragCanvas')}
         >
           <HandOutlined></HandOutlined>
         </div>
         <div
           className="cursor-pointer w-32px h-32px hover:bg-#f2f2f2  rounded-6px flex justify-center items-center ml-10px"
-          style={styleFn('line')}
-          onClick={() => {
-            setSelected('line')
-            editor.toolOperation = 'line'
-          }}
+          style={styleFn('drawLine')}
+          onClick={() => setActive('drawLine')}
         >
           <LineOutlined></LineOutlined>
         </div>

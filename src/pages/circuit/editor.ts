@@ -3,15 +3,16 @@
  * @Author: ldx
  * @Date: 2023-12-01 17:17:18
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-08 17:03:43
+ * @LastEditTime: 2023-12-09 14:57:41
  */
 
 import _ from 'lodash'
 
-import { Img, Line, OrbitControler, Rect, Scene, Vector2 } from '@/canvas'
+import { Img, Line, OrbitControler, Scene, Vector2 } from '@/canvas'
 import { Ruler } from '@/canvas/objects/ruler'
 
-import vcc from './imgs/electricity/vcc.svg'
+import ToolManager from './tools/toolManager'
+
 type Option = {
   container: HTMLDivElement
 }
@@ -42,54 +43,39 @@ export class Editor {
   line!: Line
   /** 选中的图片 */
   selectImg!: null | HTMLImageElement
-  /** 事件 */
-
+  /** tool管理器 */
+  toolManager!: ToolManager
   constructor(option: Option) {
     this.option = option
-    this.init()
-  }
-  init() {
     if (!this.option.container) return
+    // 场景相关
     const container = this.option.container
     const canvas = document.createElement('canvas')
     container.appendChild(canvas)
     this.domElement = canvas
     this.scene = new Scene({ domElement: canvas })
+    this.listen()
+    // 标尺相关
     const rulerConfig = {
       x: 0, // 刻度尺x坐标位置,坐标原点在左上角
       y: 0, // 刻度尺y坐标位置,坐标原点在左上角
       w: 20, // 标尺的高度
       h: 16 // 刻度线基础高度
     }
-    // this.scene.camera.position.set(20, 20)
-    const image = new Image()
-    image.src = vcc
-    image.onload = () => {
-      const pattern = new Img({
-        image,
-        position: new Vector2(100, 100),
-        size: new Vector2(70, 50)
-        // offset: new Vector2(70, 50).multiplyScalar(-0.5)
-      })
-      this.scene.add(pattern)
-      this.scene.render()
-    }
     this.ruler = new Ruler(rulerConfig)
     this.scene.add(this.ruler)
-    const rect = new Rect({ startX: 0, startY: 0, width: 100, height: 100 })
-
-    this.scene.add(rect)
-
+    // 控制器相关
     this.orbitControler = new OrbitControler(this.scene)
     this.orbitControler.maxZoom = 10
     this.orbitControler.minZoom = 0.1
-    this.scene.render()
     this.orbitControler.addEventListener('change', () => {
       this.scene.render()
     })
-
-    this.listen()
+    this.scene.render()
+    // tool管理
+    this.toolManager = new ToolManager(this)
   }
+
   /** 缩放 */
   wheel = _.throttle((event: WheelEvent) => {
     if (event.ctrlKey || event.metaKey) {
@@ -107,68 +93,24 @@ export class Editor {
   }, 10)
   /** 鼠标按下 */
   pointerdown = (event: PointerEvent) => {
-    const { button, clientX, clientY } = event
-
+    const { button } = event
     if (button === 0) {
       this.isPanning = true
-      this.toolOperation === 'panning' && this.orbitControler.pointerdown(event)
-      if (this.toolOperation === 'line') {
-        this.mouseStart.copy(this.scene.clientToCoord(clientX, clientY))
-
-        if (this.line) {
-          //
-          const [y, x] = [...this.line.points].reverse()
-          const deltaX = Math.abs(this.mouseStart.x - x)
-          const deltaY = Math.abs(this.mouseStart.y - y)
-          const max = Math.max(deltaX, deltaY)
-          const mouseX = max === deltaX ? this.mouseStart.x : x
-          const mouseY = max === deltaY ? this.mouseStart.y : y
-          this.line.addPoints([mouseX, mouseY])
-          this.scene.render()
-        }
-      }
+      this.toolManager.pointerdown(event)
     }
   }
   /** 鼠标移动 */
   pointermove = _.throttle((event: PointerEvent) => {
-    const { clientX, clientY } = event
-    this.mouseClipPos.copy(this.scene.clientToCoord(clientX, clientY))
-    // console.log(' this.mouseStart', clientX, clientY)
-    this.toolOperation === 'panning' && this.orbitControler.pointermove(event)
-    // 绘制线段
-    if (this.toolOperation === 'line' && this.mouseStart.isEmpty()) {
-      const [x, y] = [
-        ...(this.line?.points || this.mouseStart.toArray().concat(0, 0))
-      ].slice(-4, -2)
-      const deltaX = Math.abs(this.mouseClipPos.x - x)
-      const deltaY = Math.abs(this.mouseClipPos.y - y)
-      const max = Math.max(deltaX, deltaY)
-      const mouseX = max === deltaX ? this.mouseClipPos.x : x
-      const mouseY = max === deltaY ? this.mouseClipPos.y : y
-
-      if (!this.line) {
-        //
-        this.line = new Line()
-        this.scene.add(this.line)
-        const points = [this.mouseStart.x, this.mouseStart.y, mouseX, mouseY]
-        this.line.addPoints(points)
-      } else {
-        this.line.replacePoint(mouseX, mouseY)
-      }
-      this.scene.render()
-    }
+    this.toolManager.pointermove(event)
   }, 10)
   /** 鼠标松开 */
   pointerup = (event: PointerEvent) => {
     if (event.button === 0) {
       this.isPanning = false
-      this.orbitControler.pointerup()
+      this.toolManager.pointerup(event)
     }
   }
-  /** 鼠标移出 */
-  mouseout = () => {
-    this.orbitControler.pointerup()
-  }
+
   resize = _.throttle(() => {
     const container = this.option.container
     const width = container.clientWidth
@@ -193,7 +135,6 @@ export class Editor {
   }
   /** 拖拽元素在目标元素上松开鼠标 */
   drop = (event: DragEvent) => {
-    console.log('event', event)
     if (!this.selectImg) return
     const { clientX, clientY } = event
     const coordinate = this.scene.clientToCoord(clientX, clientY)
@@ -234,12 +175,8 @@ export class Editor {
     })
     /* 按住左键平移 */
     this.domElement.addEventListener('pointerdown', this.pointerdown)
-    this.domElement.addEventListener('pointermove', this.pointermove)
+    window.addEventListener('pointermove', this.pointermove)
     window.addEventListener('pointerup', this.pointerup)
-
-    // 鼠标划出canvas时 重置状态
-    this.domElement.addEventListener('mouseout', this.mouseout)
-
     window.addEventListener('resize', this.resize)
   }
   destroy() {
@@ -247,12 +184,8 @@ export class Editor {
     this.domElement.removeEventListener('wheel', this.wheel)
     /* 按住左键平移 */
     this.domElement.removeEventListener('pointerdown', this.pointerdown)
-    this.domElement.removeEventListener('pointermove', this.pointermove)
+    window.removeEventListener('pointermove', this.pointermove)
     window.removeEventListener('pointerup', this.pointerup)
-
-    // 鼠标划出canvas时 重置状态
-    this.domElement.removeEventListener('mouseout', this.mouseout)
-
     window.removeEventListener('resize', this.resize)
   }
 }
