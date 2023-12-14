@@ -3,14 +3,14 @@
  * @Author: ldx
  * @Date: 2023-12-09 10:21:06
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-09 15:01:38
+ * @LastEditTime: 2023-12-09 20:52:08
  */
-import { Line } from '@/canvas'
+import { Line } from '@/dxCanvas'
 
 import { Editor } from '../editor'
 import ToolBase from './toolBase'
 class ToolDragCanvas extends ToolBase {
-  readonly hotkey = ''
+  readonly keyboard = ''
   readonly type = 'dragCanvas'
   line: Line | null = null
   constructor(editor: Editor) {

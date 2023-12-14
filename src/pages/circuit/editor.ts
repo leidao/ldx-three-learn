@@ -8,8 +8,8 @@
 
 import _ from 'lodash'
 
-import { Img, Line, OrbitControler, Scene, Vector2 } from '@/canvas'
-import { Ruler } from '@/canvas/objects/ruler'
+import { Img, Line, OrbitControler, Scene, Vector2 } from '@/dxCanvas'
+import { Ruler } from '@/dxCanvas/objects/ruler'
 
 import ToolManager from './tools/toolManager'
 

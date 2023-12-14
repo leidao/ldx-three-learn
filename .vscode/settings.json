@@ -72,7 +72,7 @@
     "git.autofetch": true,
     "tabnine.experimentalAutoImports": true,
     "[typescript]": {
-      "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+      "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "typescript.tsdk": "node_modules/typescript/lib",
 }

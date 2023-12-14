@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-09 09:38:54
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-09 18:57:23
+ * @LastEditTime: 2023-12-09 20:52:42
  */
 /*
  * @Description:
@@ -13,7 +13,7 @@
  * @LastEditTime: 2023-12-09 10:10:29
  */
 
-import { EventDispatcher } from '@/canvas/core/eventDispatcher'
+import { EventDispatcher } from '@/dxCanvas/core/eventDispatcher'
 
 import { Editor } from '../editor'
 import ToolBase from './toolBase'
@@ -23,9 +23,9 @@ import ToolDrawLine from './toolDrawLine'
 class ToolManager extends EventDispatcher {
   toolMap = new Map<string, ToolBase>()
   /**
-   * hotkey => tool type
+   * keyboard => tool type
    */
-  hotkeyMap = new Map<string, string>()
+  keyboardMap = new Map<string, string>()
   /** 激活的tool */
   activeTool: ToolBase | null = null
   /** 禁止切换tool */
@@ -38,7 +38,7 @@ class ToolManager extends EventDispatcher {
   /** 注册 */
   register(tool: ToolBase) {
     this.registerTool(tool)
-    this.registerHotKey(tool)
+    this.registerKeyboard(tool)
   }
   registerTool(tool: ToolBase) {
     if (!tool.type) {
@@ -49,12 +49,12 @@ class ToolManager extends EventDispatcher {
     }
     this.toolMap.set(tool.type, tool)
   }
-  registerHotKey(tool: ToolBase) {
-    if (!tool.hotkey) return
-    if (this.hotkeyMap.has(tool.hotkey)) {
+  registerKeyboard(tool: ToolBase) {
+    if (!tool.keyboard) return
+    if (this.keyboardMap.has(tool.keyboard)) {
       console.warn(`tool快捷键 ${tool.type} 已经被注册过`)
     }
-    this.hotkeyMap.set(tool.hotkey, tool.type)
+    this.keyboardMap.set(tool.keyboard, tool.type)
   }
   /** 设置工具激活 */
   setActiveTool(toolName: string) {
@@ -104,7 +104,7 @@ class ToolManager extends EventDispatcher {
     window.addEventListener('pointerup', this.pointerup)
 
     // 快捷键绑定
-    // this.hotkeyMap.forEach((type, key) => {
+    // this.keyboardMap.forEach((type, key) => {
     //   key = `Key${key.toUpperCase()}`
     //   this.editor.keybindingManager.register({
     //     key: { keyCode: key },

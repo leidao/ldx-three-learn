@@ -1,10 +1,10 @@
-import { Vector2 } from '@/canvas'
+import { Vector2 } from '@/dxCanvas'
 
 import { Editor } from '../editor'
 
 abstract class ToolBase {
   /** 快捷键 */
-  hotkey = ''
+  keyboard = ''
   /** 类型 */
   type = 'base'
   /** 按下的点位 */

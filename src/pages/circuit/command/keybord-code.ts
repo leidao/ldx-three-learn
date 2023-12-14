@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-12-09 18:58:32
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-09 19:02:04
+ * @LastEditTime: 2023-12-14 15:51:35
  */
 export const KeyboardCode: { [key: number]: string } = {
   16: 'shift',

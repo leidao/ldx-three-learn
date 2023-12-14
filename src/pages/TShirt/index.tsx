@@ -8,7 +8,7 @@
 import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 
-import { Img, ImgControler, OrbitControler, Scene, Vector2 } from '@/canvas'
+import { Img, ImgControler, OrbitControler, Scene, Vector2 } from '@/dxCanvas'
 
 const Home = () => {
   const ref = useRef<HTMLCanvasElement>(null)

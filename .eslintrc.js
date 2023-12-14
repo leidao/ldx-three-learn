@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 21:56:29
  * @LastEditors: ldx
- * @LastEditTime: 2022-04-06 22:30:07
+ * @LastEditTime: 2023-12-11 09:33:50
  */
 module.exports = {
   root: true,
@@ -55,7 +55,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'no-case-declarations': 'off',
     'no-irregular-whitespace': 'off',
-    'linebreak-style': [0, 'error', 'windows']
+    'linebreak-style': [0, 'error', 'unix']
     // 'jsx-a11y/anchor-is-valid': [
     //   'error',
     //   {
