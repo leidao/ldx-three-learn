@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-10-26 09:21:40
  * @LastEditors: ldx
- * @LastEditTime: 2024-07-18 15:37:11
+ * @LastEditTime: 2024-07-19 10:41:24
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -102,10 +102,10 @@ export default class Viewer  {
 
     // this.renderer.outputEncoding = THREE.sRGBEncoding
 
-    const axesHelper1 = new THREE.DirectionalLightHelper(directionalLight1,10);
+    // const axesHelper1 = new THREE.DirectionalLightHelper(directionalLight1,10);
     // const axesHelper2 = new THREE.DirectionalLightHelper(directionalLight2,10);
     // axesHelper.position.set(0,30,0)
-    this.scene.add(axesHelper1);
+    // this.scene.add(axesHelper1);
     // this.scene.add(axesHelper2);
 
     this.restoreContext()

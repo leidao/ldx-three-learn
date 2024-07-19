@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 19:34:55
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-01 13:47:13
+ * @LastEditTime: 2024-07-19 10:40:25
  */
 import React from 'react';
 import Layout from '@/layout';
@@ -46,15 +46,6 @@ export const routes = [
         auth: []
     },
     {
-        path: '/circuit/entry',
-        key: 'circuit.entry',
-        component: React.lazy(() => import('@/pages/circuit/entry')),
-        icon: '',
-        title: '电路图编辑器',
-        hideInMenu: false,
-        auth: []
-    },
-    {
         /* 无匹配路由 放置在最后一个路由的位置 */
         path: '*',
         key: '*',
@@ -78,13 +69,4 @@ export default [
         hideInMenu: true,
         auth: []
     },
-    {
-        path: '/circuit',
-        key: 'circuit',
-        component: React.lazy(() => import('@/pages/circuit')),
-        icon: '',
-        title: '电路图编辑器',
-        hideInMenu: true,
-        auth: []
-    }
 ];
