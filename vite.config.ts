@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2022-04-06 14:45:22
  * @LastEditors: ldx
- * @LastEditTime: 2023-12-06 10:47:43
+ * @LastEditTime: 2024-07-18 14:28:09
  */
 import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
@@ -56,6 +56,7 @@ export default defineConfig({
   server: {
     port: 8004,
     open: true,
+    host: true, // host: "0.0.0.0"
     // 接口代理地址设置
     proxy: {
       '/components/': {

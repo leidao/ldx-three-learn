@@ -3,7 +3,7 @@
  * @Author: ldx
  * @Date: 2023-11-03 23:49:21
  * @LastEditors: ldx
- * @LastEditTime: 2023-11-10 14:59:24
+ * @LastEditTime: 2024-07-18 13:48:30
  */
 import React from 'react'
 
@@ -45,6 +45,24 @@ export const examples = [
     component: React.lazy(() => import('@/pages/nebularOrbit')),
     icon: nebularOrbit,
     title: '星云轨道',
+    hideInMenu: true,
+    auth: []
+  },
+  {
+    path: '/map',
+    key: 'map',
+    component: React.lazy(() => import('@/pages/map')),
+    icon: nebularOrbit,
+    title: '地图',
+    hideInMenu: true,
+    auth: []
+  },
+  {
+    path: '/serviceArea',
+    key: 'serviceArea',
+    component: React.lazy(() => import('@/pages/serviceArea')),
+    icon: nebularOrbit,
+    title: '红格服务区',
     hideInMenu: true,
     auth: []
   }
