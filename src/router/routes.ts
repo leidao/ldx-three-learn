@@ -30,11 +30,20 @@ export const routes = [
     auth: []
   },
   {
-    path: '/roadnet',
-    key: 'roadnet',
-    component: React.lazy(() => import('@/pages/roadnet')),
+    path: '/vpp',
+    key: 'vpp',
+    component: React.lazy(() => import('@/pages/vpp')),
     icon: '',
-    title: '路网编辑器',
+    title: '虚拟电厂',
+    hideInMenu: false,
+    auth: []
+  },
+  {
+    path: '/dxEditor',
+    key: 'dxEditor',
+    component: React.lazy(() => import('@/pages/dxEditor')),
+    icon: '',
+    title: '电路编辑器',
     hideInMenu: false,
     auth: []
   },

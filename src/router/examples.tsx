@@ -9,8 +9,10 @@ import React from 'react'
 
 import factory from '/factory/img/factory.png'
 import nebularOrbit from '/nebularOrbit/img/nebularOrbit.png'
+import image from '/nebularOrbit/img/image.png'
 import plane from '/plane/img/plane.png'
 import propagate from '/propagate/img/propagate.png'
+import 河南 from '/energy-picture/img/河南.png'
 export const examples = [
   {
     path: '/plane',
@@ -52,18 +54,18 @@ export const examples = [
     path: '/map',
     key: 'map',
     component: React.lazy(() => import('@/pages/map')),
-    icon: nebularOrbit,
+    icon: image,
     title: '地图',
     hideInMenu: true,
     auth: []
   },
   {
-    path: '/serviceArea',
-    key: 'serviceArea',
-    component: React.lazy(() => import('@/pages/serviceArea')),
-    icon: nebularOrbit,
-    title: '红格服务区',
+    path: 'https://leidao.github.io/energy-picture/',
+    key: 'energy-picture',
+    icon: 河南,
+    title: '河南一张图',
     hideInMenu: true,
     auth: []
-  }
+  },
+  
 ]

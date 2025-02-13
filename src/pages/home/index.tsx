@@ -20,7 +20,7 @@ const Home = () => {
         >
           <Divider orientation="left">简介</Divider>
           <div style={{ padding: '0 20px 30px 40px' }}>
-            由于大环境的原因，尝试了下面试，不出意料的难找。因为决定把工作和学习中遇到的有趣的案例作为我的个人展示区，期待能给自己的面试加分。我会每年保持一定的更新频率，希望大家能喜欢。
+            把工作和学习中遇到的有趣的案例作为我的个人展示区，我会每年保持一定的更新频率，希望大家能喜欢。
           </div>
           <Divider orientation="left">最近目标</Divider>
           <div style={{ padding: '0 20px 30px 40px' }}>
@@ -43,7 +43,8 @@ const Home = () => {
           </div>
           <Divider orientation="left">主要技术</Divider>
           <div style={{ padding: '0 20px 30px 40px' }}>
-            <div>· 框架使用vite+react+tailwindcss搭建</div>
+            <div>· 框架使用vue3/react+tailwindcss搭建</div>
+            <div>· 2d使用基于canvas自己搭建的dxCanvas框架</div>
             <div>· 3d主要还是使用three.js</div>
             <div>· 地图的话就以amap为主</div>
           </div>

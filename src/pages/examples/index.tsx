@@ -35,7 +35,8 @@ const Home = () => {
                 className="border-1px border-#ebeef5 w-378px cursor-pointer h-268px"
                 style={{ boxShadow: '0 2px 12px 0 rgba(0,0,0,.1)' }}
                 onClick={() => {
-                  window.open(`/ldx-three-learn/#${example.path}`)
+                  const url = example.path.startsWith('http') ? example.path : `/ldx-three-learn/#${example.path}`
+                  window.open(url)
                 }}
               >
                 <div className="h-38px leading-38px px-10px text-18px text-#303133 border-b-1px border-b-#ebeef5">
