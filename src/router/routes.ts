@@ -48,6 +48,15 @@ export const routes = [
     auth: []
   },
   {
+    path: '/serviceZone',
+    key: 'serviceZone',
+    component: React.lazy(() => import('@/pages/serviceZone')),
+    icon: '',
+    title: '红格服务区',
+    hideInMenu: false,
+    auth: []
+  },
+  {
     /* 无匹配路由 放置在最后一个路由的位置 */
     path: '*',
     key: '*',
