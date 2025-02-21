@@ -1,7 +1,7 @@
 # 前端可视化案例展示
 
 ### 在线预览
-- [示例展示页面](https://ldx18015816566.gitee.io/ldx-three-learn/#/examples)
+- [示例展示页面](https://leidao.github.io/ldx-three-learn/#/examples)
 
 ### 项目简介
 这是一个综合性的前端可视化案例集合，包含：
